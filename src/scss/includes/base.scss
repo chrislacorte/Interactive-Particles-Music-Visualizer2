@@ -508,14 +508,6 @@ input:checked + .toggle-slider:before {
   color: white;
   transform: translateY(-1px);
 }
-
-.mode-btn.active {
-  background: #6b46c1;
-  border-color: #6b46c1;
-  color: white;
-  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.3);
-}
-
 .record-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -562,7 +554,7 @@ input:checked + .toggle-slider:before {
 @media screen and (max-width: 480px) {
   .bottom-menu {
     padding: 16px 20px;
-    gap: 16px;
+    gap: 20px;
     max-width: 95vw;
   }
   
