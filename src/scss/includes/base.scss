@@ -160,7 +160,7 @@ a:focus-visible {
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 40px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 100;
@@ -499,41 +499,6 @@ input:checked + .toggle-slider:before {
   flex-wrap: wrap;
   align-items: center;
   padding: 8px 0;
-  position: relative;
-}
-
-.current-mode-display {
-  position: absolute;
-  top: -32px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(107, 70, 193, 0.9);
-  color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(107, 70, 193, 0.5);
-  box-shadow: 0 2px 8px rgba(107, 70, 193, 0.3);
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.current-mode-display::before {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 4px solid rgba(107, 70, 193, 0.9);
 }
 
 .hide-section {
@@ -624,14 +589,8 @@ input:checked + .toggle-slider:before {
 @media screen and (max-width: 480px) {
   .bottom-menu {
     padding: 16px 20px;
-    gap: 28px;
+    gap: 36px;
     max-width: 95vw;
-  }
-  
-  .current-mode-display {
-    font-size: 10px;
-    padding: 3px 10px;
-    top: -28px;
   }
   
   .upload-section {
