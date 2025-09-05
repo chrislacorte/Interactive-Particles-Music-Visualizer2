@@ -22,8 +22,6 @@ export default class FileUploadManager extends EventDispatcher {
     // Create upload modal
     this.createUploadModal()
     
-    // Add upload button to existing interface
-    this.addUploadButton()
   }
 
   createUploadModal() {
