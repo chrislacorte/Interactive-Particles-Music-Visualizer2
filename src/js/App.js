@@ -22,6 +22,11 @@ export default class App {
   constructor() {
     this.onClickBinder = () => this.init()
     document.addEventListener('click', this.onClickBinder)
+    
+    // Recording variables
+    this.mediaRecorder = null
+    this.recordedChunks = []
+    this.isRecording = false
   }
 
   init() {
@@ -448,6 +453,16 @@ export default class App {
     // Initialize with default colors
     updateColor(300, colorIndicator1, true)
     updateColor(180, colorIndicator2, false)
+
+    // Record button functionality
+    const recordBtn = document.getElementById('recordBtn')
+    recordBtn.addEventListener('click', () => {
+      if (this.isRecording) {
+        this.stopRecording()
+      } else {
+        this.startRecording()
+      }
+    })
   }
 
   resize() {
@@ -466,5 +481,79 @@ export default class App {
     App.audioManager.update()
 
     this.renderer.render(this.scene, this.camera)
+  }
+
+  startRecording() {
+    try {
+      // Get canvas stream at 60fps
+      const stream = this.renderer.domElement.captureStream(60)
+      
+      // Initialize MediaRecorder with WebM format
+      this.mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm; codecs=vp8'
+      })
+      
+      // Reset recorded chunks
+      this.recordedChunks = []
+      
+      // Handle data available event
+      this.mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          this.recordedChunks.push(event.data)
+        }
+      }
+      
+      // Handle stop event
+      this.mediaRecorder.onstop = () => {
+        const blob = new Blob(this.recordedChunks, { type: 'video/webm' })
+        const url = URL.createObjectURL(blob)
+        
+        // Create download link
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `visualizer-recording-${Date.now()}.webm`
+        document.body.appendChild(a)
+        a.click()
+        document.body.removeChild(a)
+        
+        // Clean up
+        URL.revokeObjectURL(url)
+        this.recordedChunks = []
+      }
+      
+      // Start recording
+      this.mediaRecorder.start()
+      this.isRecording = true
+      this.updateRecordButtonState()
+      
+      console.log('Recording started')
+      
+    } catch (error) {
+      console.error('Failed to start recording:', error)
+      alert('Recording failed. Your browser may not support this feature.')
+    }
+  }
+
+  stopRecording() {
+    if (this.mediaRecorder && this.isRecording) {
+      this.mediaRecorder.stop()
+      this.isRecording = false
+      this.updateRecordButtonState()
+      
+      console.log('Recording stopped')
+    }
+  }
+
+  updateRecordButtonState() {
+    const recordBtn = document.getElementById('recordBtn')
+    const span = recordBtn.querySelector('span')
+    
+    if (this.isRecording) {
+      recordBtn.classList.add('recording')
+      span.textContent = 'Recording...'
+    } else {
+      recordBtn.classList.remove('recording')
+      span.textContent = 'Record'
+    }
   }
 }

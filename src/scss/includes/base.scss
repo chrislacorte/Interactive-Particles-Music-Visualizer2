@@ -455,6 +455,42 @@ input:checked + .toggle-slider:before {
   color: white;
 }
 
+.record-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.record-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.record-btn.recording {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+  animation: recordPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes recordPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 /* Upload Feature Styles */
 .upload-btn {
   background: rgba(255, 255, 255, 0.1);
