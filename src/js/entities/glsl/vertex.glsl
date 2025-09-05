@@ -9,6 +9,12 @@ uniform float amplitude;
 uniform float frequency;
 uniform float maxDistance;
 
+uniform vec2 u_fingerPosition; // Normalized screen coords from hand tracking
+uniform float u_paintRadius;
+uniform float u_paintStrength;
+uniform float u_conductorY; // Normalized Y position from hand tracking
+uniform int u_mode; // 0: normal, 1: paint, 2: conductor
+
 
 vec3 mod289(vec3 x){
   return x-floor(x*(1./289.))*289.;
@@ -120,6 +126,24 @@ void main() {
   vec3 newpos = position;
   vec3 target = position + (normal*.1) + curl(newpos.x * frequency, newpos.y * frequency, newpos.z * frequency) * amplitude;
   
+  if (u_mode == 1) { // Paint mode
+    // Map normalized finger position to a 3D plane (e.g., XY plane at Z=0)
+    // Assuming particles are roughly in a -2 to 2 range for X/Y
+    vec3 mappedFingerPos = vec3((u_fingerPosition.x - 0.5) * 4.0, (u_fingerPosition.y - 0.5) * -4.0, 0.0); // Adjust scale as needed
+    float dist = distance(newpos.xy, mappedFingerPos.xy); // Distance in XY plane
+    if (dist < u_paintRadius) {
+      vec2 dir = normalize(newpos.xy - mappedFingerPos.xy);
+      newpos.xy += dir * (u_paintRadius - dist) * u_paintStrength;
+    }
+  } else if (u_mode == 2) { // Conductor mode
+    float waveStrength = 1.0; // Max amplitude of the wave
+    float waveFrequency = 5.0; // How many waves across the screen
+    // u_conductorY is 0-1, map it to -0.5 to 0.5 for offset
+    float yOffset = (u_conductorY - 0.5) * waveStrength;
+    // Apply a sine wave to the Y position based on X and time, scaled by hand Y
+    newpos.y += sin(newpos.x * waveFrequency + time * 2.0) * yOffset;
+  }
+
   float d = length(newpos - target) / maxDistance;
   newpos = mix(position, target, pow(d, 4.));
   newpos.z += sin(time) * (.1 * offsetGain);

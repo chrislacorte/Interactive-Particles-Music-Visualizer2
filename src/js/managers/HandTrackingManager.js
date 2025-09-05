@@ -162,6 +162,9 @@ export default class HandTrackingManager extends EventDispatcher {
     
     // Process conductor gesture (vertical hand movement)
     this.processConductorGesture(hands)
+
+    // Process finger paint gesture (index finger tip position)
+    this.processFingerPaintGesture(hands);
     
     // Process zoom gesture (thumb-index distance)
     this.processZoomGesture(hands)
@@ -174,25 +177,32 @@ export default class HandTrackingManager extends EventDispatcher {
     const hand = hands[0]
     const wrist = hand[0] // WRIST landmark
     const currentY = wrist.y
+    
+    // Smooth the current Y position for conductor mode
+    this.smoothedConductorY = this.lerp(this.smoothedConductorY || currentY, currentY, this.smoothingFactor);
 
-    if (this.previousHandY !== null) {
-      const deltaY = currentY - this.previousHandY
-      const velocity = Math.abs(deltaY)
-      
-      // Apply threshold and smoothing
-      if (velocity > this.conductorThreshold) {
-        this.conductorIntensity = velocity * 10 // Amplify the movement
-        this.smoothedConductor = this.lerp(this.smoothedConductor, this.conductorIntensity, this.smoothingFactor)
-        
-        this.dispatchEvent({
-          type: 'conductorGesture',
-          intensity: this.smoothedConductor,
-          direction: deltaY > 0 ? 'down' : 'up'
-        })
-      }
-    }
+    this.dispatchEvent({
+      type: 'conductorGesture',
+      y: this.smoothedConductorY, // Normalized Y position (0 to 1)
+      // Also include intensity and direction for general reactivity if needed
+      intensity: this.previousHandY !== null ? Math.abs(currentY - this.previousHandY) * 10 : 0,
+      direction: this.previousHandY !== null ? (currentY - this.previousHandY > 0 ? 'down' : 'up') : 'none'
+    });
 
-    this.previousHandY = currentY
+    this.previousHandY = currentY;
+  }
+
+  processFingerPaintGesture(hands) {
+    if (hands.length === 0) return;
+
+    const hand = hands;
+    const indexTip = hand; // INDEX_FINGER_TIP
+
+    this.dispatchEvent({
+      type: 'fingerPaintGesture',
+      x: indexTip.x,
+      y: indexTip.y
+    });
   }
 
   processZoomGesture(hands) {

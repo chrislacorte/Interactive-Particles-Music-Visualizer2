@@ -100,6 +100,10 @@ export default class App {
     App.handTrackingManager.addEventListener('zoomGesture', (event) => {
       this.onZoomGesture(event)
     })
+    App.handTrackingManager.addEventListener('fingerPaintGesture', (event) => {
+      this.onFingerPaintGesture(event);
+    });
+
     
     // Add webcam position manager event listeners if needed
     // App.webcamPositionManager.addEventListener('positionChanged', (event) => {
@@ -219,21 +223,25 @@ export default class App {
   }
 
   onConductorGesture(event) {
+    if (this.particles && this.particles.material) {      
+      // Update conductorY uniform for the conductor mode
+      this.particles.material.uniforms.u_conductorY.value = event.y;
+
+      // Existing audio reactivity based on intensity (can be blended or overridden by specific modes)
+      if (App.audioManager?.isPlaying) {
+        const intensity = Math.min(event.intensity, 2.0); // Cap the intensity
+        const baseAmplitude = 0.8 + (App.audioManager.frequencyData.high * 0.2);
+        this.particles.material.uniforms.amplitude.value = baseAmplitude + (intensity * 0.5);
+        const baseOffsetGain = App.audioManager.frequencyData.mid * 0.6;
+        this.particles.material.uniforms.offsetGain.value = baseOffsetGain + (intensity * 0.3);
+      }
+    }
+  }
+
+  onFingerPaintGesture(event) {
     if (this.particles && this.particles.material) {
-      // Map conductor intensity to amplitude and offset gain
-      const intensity = Math.min(event.intensity, 2.0) // Cap the intensity
-      
-      // Increase amplitude based on conductor movement
-      const baseAmplitude = App.audioManager?.isPlaying ? 
-        0.8 + (App.audioManager.frequencyData.high * 0.2) : 1.0
-      
-      this.particles.material.uniforms.amplitude.value = baseAmplitude + (intensity * 0.5)
-      
-      // Add some offset gain for more dramatic effect
-      const baseOffsetGain = App.audioManager?.isPlaying ? 
-        App.audioManager.frequencyData.mid * 0.6 : 0
-      
-      this.particles.material.uniforms.offsetGain.value = baseOffsetGain + (intensity * 0.3)
+      // Update finger position uniform for the paint mode
+      this.particles.material.uniforms.u_fingerPosition.value.set(event.x, event.y);
     }
   }
 
