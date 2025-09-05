@@ -348,16 +348,6 @@ export default class App {
       }
     })
 
-    // Upload button functionality (single event listener)
-    const uploadBtn = document.getElementById('uploadBtn')
-    if (uploadBtn) {
-      uploadBtn.addEventListener('click', () => {
-        if (App.fileUploadManager) {
-          App.fileUploadManager.showUploadModal()
-        }
-      })
-    }
-
     // Color picker functionality for both sliders
     const colorSlider1 = document.getElementById('colorSlider1')
     const colorIndicator1 = document.getElementById('colorIndicator1')
