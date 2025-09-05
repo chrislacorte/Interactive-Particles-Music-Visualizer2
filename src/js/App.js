@@ -259,6 +259,57 @@ export default class App {
     const bottomMenu = document.getElementById('bottomMenu')
     bottomMenu.style.display = 'block'
 
+    // Toggle functionality
+    const handtrackToggle = document.getElementById('handtrackToggle')
+    const hideToggle = document.getElementById('hideToggle')
+    const topMenu = document.getElementById('topMenu')
+    
+    // Handtrack toggle
+    handtrackToggle.addEventListener('change', (e) => {
+      if (App.handTrackingManager) {
+        if (e.target.checked) {
+          // Enable hand tracking visualization
+          App.handTrackingManager.setShowHandTracking(true)
+        } else {
+          // Disable hand tracking visualization
+          App.handTrackingManager.setShowHandTracking(false)
+        }
+      }
+    })
+    
+    // Hide toggle
+    hideToggle.addEventListener('change', (e) => {
+      if (e.target.checked) {
+        // Hide UI elements
+        bottomMenu.classList.add('hidden')
+        topMenu.classList.add('hidden')
+      } else {
+        // Show UI elements
+        bottomMenu.classList.remove('hidden')
+        topMenu.classList.remove('hidden')
+      }
+    })
+
+    // Gesture info button
+    const gestureInfoBtn = document.getElementById('gestureInfoBtn')
+    const gestureSlideout = document.getElementById('gestureSlideout')
+    const closeGesture = document.getElementById('closeGesture')
+    
+    gestureInfoBtn.addEventListener('click', () => {
+      gestureSlideout.classList.add('open')
+    })
+    
+    closeGesture.addEventListener('click', () => {
+      gestureSlideout.classList.remove('open')
+    })
+    
+    // Close slideout when clicking outside
+    gestureSlideout.addEventListener('click', (e) => {
+      if (e.target === gestureSlideout) {
+        gestureSlideout.classList.remove('open')
+      }
+    })
+
     // Color picker functionality for both sliders
     const colorSlider1 = document.getElementById('colorSlider1')
     const colorIndicator1 = document.getElementById('colorIndicator1')

@@ -69,6 +69,33 @@
       </div>
       
       <div class="bottom-menu" id="bottomMenu" style="display: none;">
+        <div class="menu-toggles">
+          <div class="toggle-container">
+            <label class="toggle-switch">
+              <input type="checkbox" id="handtrackToggle" checked>
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Handtrack</span>
+          </div>
+          
+          <div class="toggle-container">
+            <label class="toggle-switch">
+              <input type="checkbox" id="hideToggle">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">hide</span>
+          </div>
+        </div>
+        
+        <button class="upload-btn" id="uploadBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7,10 12,15 17,10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Upload Music</span>
+        </button>
+        
         <div class="color-section">
           <div class="color-label">Color Selection</div>
           <div class="color-pickers-wrapper">
@@ -89,6 +116,77 @@
           <button class="mode-btn" data-mode="anomaly">Anomaly</button>
           <button class="mode-btn" data-mode="waves">Waves</button>
           <button class="mode-btn" data-mode="spiral">Spiral</button>
+        </div>
+        
+        <button class="gesture-info-btn" id="gestureInfoBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="m9,9 6,6"></path>
+            <path d="m15,9 -6,6"></path>
+          </svg>
+          <span>Gesture Overview</span>
+        </button>
+      </div>
+      
+      <!-- Gesture Overview Slideout -->
+      <div class="gesture-slideout" id="gestureSlideout">
+        <div class="gesture-slideout-content">
+          <div class="gesture-header">
+            <h2>Gesture Overview</h2>
+            <button class="close-gesture" id="closeGesture">&times;</button>
+          </div>
+          
+          <div class="gesture-list">
+            <div class="gesture-item">
+              <div class="gesture-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2v20"></path>
+                  <path d="m8 6 4-4 4 4"></path>
+                  <path d="m8 18 4 4 4 4"></path>
+                </svg>
+              </div>
+              <div class="gesture-info">
+                <h3>Conductor Gesture</h3>
+                <p>Move your hand up and down to control the intensity and amplitude of the particle effects. The faster you move, the more dramatic the visual response.</p>
+              </div>
+            </div>
+            
+            <div class="gesture-item">
+              <div class="gesture-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path d="m12 1 1.27 2.76L16 2l2 2-1.76 2.73L19 8l-1 1.73-2.76-1.27L16 11l-2.73-1.27L12 12l-1.27-2.73L8 11l-2-2 1.76-2.73L5 8l1-1.73 2.76 1.27L8 5l2.73 1.27z"></path>
+                </svg>
+              </div>
+              <div class="gesture-info">
+                <h3>Zoom Gesture</h3>
+                <p>Pinch with your thumb and index finger to zoom in and out of the visualization. Bring fingers together to zoom out, spread apart to zoom in.</p>
+              </div>
+            </div>
+            
+            <div class="gesture-item">
+              <div class="gesture-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </div>
+              <div class="gesture-info">
+                <h3>Hand Tracking</h3>
+                <p>Enable webcam to activate hand tracking. Your hand movements will be detected and translated into real-time visual effects that sync with the music.</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="gesture-tips">
+            <h3>Tips for Best Results</h3>
+            <ul>
+              <li>Ensure good lighting for optimal hand detection</li>
+              <li>Keep your hand clearly visible in the webcam view</li>
+              <li>Make deliberate, smooth movements for best response</li>
+              <li>Try different gesture combinations for unique effects</li>
+            </ul>
+          </div>
         </div>
       </div>
       
