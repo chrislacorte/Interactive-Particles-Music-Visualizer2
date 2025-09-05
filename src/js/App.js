@@ -107,6 +107,11 @@ export default class App {
         App.audioManager.pause()
       }
 
+      // Check if this is a file from localStorage (metadata only)
+      if (!file.url && !(file instanceof File)) {
+        throw new Error('Audio data not available. Please re-upload the file.')
+      }
+
       // Load the new audio file
       const audioListener = new THREE.AudioListener()
       const newAudio = new THREE.Audio(audioListener)
