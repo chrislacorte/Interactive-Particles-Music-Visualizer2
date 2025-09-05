@@ -78,18 +78,14 @@ export default class App {
     // Color picker functionality for both sliders
     const colorSlider1 = document.getElementById('colorSlider1')
     const colorIndicator1 = document.getElementById('colorIndicator1')
-    const hexDisplay1 = document.getElementById('hexDisplay1')
     
     const colorSlider2 = document.getElementById('colorSlider2')
     const colorIndicator2 = document.getElementById('colorIndicator2')
-    const hexDisplay2 = document.getElementById('hexDisplay2')
 
-    const updateColor = (hue, indicator, display, isFirst = true) => {
+    const updateColor = (hue, indicator, isFirst = true) => {
       const color = new THREE.Color().setHSL(hue / 360, 1, 0.5)
-      const hexColor = '#' + color.getHexString().toUpperCase()
       
-      indicator.style.background = hexColor
-      display.textContent = hexColor
+      indicator.style.background = '#' + color.getHexString()
       
       // Update particle colors in real-time
       if (this.particles) {
@@ -102,11 +98,99 @@ export default class App {
     }
 
     colorSlider1.addEventListener('input', (e) => {
-      updateColor(parseInt(e.target.value), colorIndicator1, hexDisplay1, true)
+      updateColor(parseInt(e.target.value), colorIndicator1, true)
     })
     
     colorSlider2.addEventListener('input', (e) => {
-      updateColor(parseInt(e.target.value), colorIndicator2, hexDisplay2, false)
+      updateColor(parseInt(e.target.value), colorIndicator2, false)
+    })
+
+    // Hex color input tooltip functionality
+    const hexTooltip = document.getElementById('hexTooltip')
+    const hexInput = document.getElementById('hexInput')
+    const applyHex = document.getElementById('applyHex')
+    const cancelHex = document.getElementById('cancelHex')
+    let currentColorIndicator = null
+    let isFirstColor = true
+
+    const showHexTooltip = (indicator, isFirst) => {
+      currentColorIndicator = indicator
+      isFirstColor = isFirst
+      
+      const rect = indicator.getBoundingClientRect()
+      hexTooltip.style.left = rect.left + 'px'
+      hexTooltip.style.top = (rect.top - hexTooltip.offsetHeight - 10) + 'px'
+      hexTooltip.style.display = 'flex'
+      
+      // Get current color and set as placeholder
+      const currentColor = indicator.style.background
+      hexInput.value = ''
+      hexInput.focus()
+    }
+
+    const hideHexTooltip = () => {
+      hexTooltip.style.display = 'none'
+      currentColorIndicator = null
+    }
+
+    const applyHexColor = () => {
+      const hexValue = hexInput.value.trim()
+      if (hexValue.match(/^#[0-9A-Fa-f]{6}$/)) {
+        const color = new THREE.Color(hexValue)
+        currentColorIndicator.style.background = hexValue
+        
+        // Update particle colors
+        if (this.particles) {
+          if (isFirstColor) {
+            this.particles.updateStartColor(color)
+          } else {
+            this.particles.updateEndColor(color)
+          }
+        }
+        
+        // Update slider position to match color
+        const hsl = {}
+        color.getHSL(hsl)
+        const slider = isFirstColor ? colorSlider1 : colorSlider2
+        slider.value = Math.round(hsl.h * 360)
+        
+        hideHexTooltip()
+      } else {
+        hexInput.style.borderColor = '#ff4444'
+        setTimeout(() => {
+          hexInput.style.borderColor = 'rgba(255, 255, 255, 0.3)'
+        }, 1000)
+      }
+    }
+
+    // Color indicator click events
+    colorIndicator1.addEventListener('click', (e) => {
+      e.stopPropagation()
+      showHexTooltip(colorIndicator1, true)
+    })
+
+    colorIndicator2.addEventListener('click', (e) => {
+      e.stopPropagation()
+      showHexTooltip(colorIndicator2, false)
+    })
+
+    // Hex tooltip events
+    applyHex.addEventListener('click', applyHexColor)
+    cancelHex.addEventListener('click', hideHexTooltip)
+    
+    hexInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        applyHexColor()
+      } else if (e.key === 'Escape') {
+        hideHexTooltip()
+      }
+    })
+
+    // Close tooltip when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!hexTooltip.contains(e.target) && !colorIndicator1.contains(e.target) && !colorIndicator2.contains(e.target)) {
+        hideHexTooltip()
+      }
     })
 
     // Mode buttons functionality
@@ -127,8 +211,8 @@ export default class App {
     })
 
     // Initialize with default colors
-    updateColor(300, colorIndicator1, hexDisplay1, true)
-    updateColor(180, colorIndicator2, hexDisplay2, false)
+    updateColor(300, colorIndicator1, true)
+    updateColor(180, colorIndicator2, false)
   }
 
   resize() {
