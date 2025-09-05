@@ -348,16 +348,6 @@ export default class App {
       }
     })
 
-    // Upload button functionality (single event listener)
-    const uploadBtn = document.getElementById('uploadBtn')
-    if (uploadBtn) {
-      uploadBtn.addEventListener('click', () => {
-        if (App.fileUploadManager) {
-          App.fileUploadManager.showUploadModal()
-        }
-      })
-    }
-
     // Color picker functionality for both sliders
     const colorSlider1 = document.getElementById('colorSlider1')
     const colorIndicator1 = document.getElementById('colorIndicator1')
@@ -478,7 +468,6 @@ export default class App {
 
     // Mode buttons functionality
     const modeButtons = document.querySelectorAll('.mode-btn')
-    const currentModeDisplay = document.getElementById('currentModeDisplay')
     
     modeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -489,11 +478,6 @@ export default class App {
         
         // Update visualizer mode
         const mode = btn.dataset.mode
-        
-        // Update current mode display
-        if (currentModeDisplay) {
-          currentModeDisplay.textContent = mode.charAt(0).toUpperCase() + mode.slice(1)
-        }
         
         if (this.particles) {
           this.particles.setMode(mode)
