@@ -9,6 +9,7 @@ export default class ReactiveParticles extends THREE.Object3D {
     super()
     this.name = 'ReactiveParticles'
     this.time = 0
+    this.currentMode = 'particles'
     this.properties = {
       startColor: 0xff00ff,
       endColor: 0x00ffff,
@@ -44,15 +45,70 @@ export default class ReactiveParticles extends THREE.Object3D {
     this.resetMesh()
   }
 
+  updateColors(color) {
+    // Create complementary color for gradient effect
+    const complementaryColor = new THREE.Color().setHSL(
+      (color.getHSL({}).h + 0.5) % 1,
+      1,
+      0.5
+    )
+    
+    this.material.uniforms.startColor.value = color
+    this.material.uniforms.endColor.value = complementaryColor
+  }
+
+  setMode(mode) {
+    this.currentMode = mode
+    this.resetMesh()
+  }
+
   createBoxMesh() {
-    // Randomly generate segment counts for width, height, and depth to create varied box geometries
-    let widthSeg = Math.floor(THREE.MathUtils.randInt(5, 20))
-    let heightSeg = Math.floor(THREE.MathUtils.randInt(1, 40))
-    let depthSeg = Math.floor(THREE.MathUtils.randInt(5, 80))
+    let widthSeg, heightSeg, depthSeg
+    
+    switch(this.currentMode) {
+      case 'particles':
+        widthSeg = Math.floor(THREE.MathUtils.randInt(5, 20))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(1, 40))
+        depthSeg = Math.floor(THREE.MathUtils.randInt(5, 80))
+        break
+      case 'circles':
+        widthSeg = 20
+        heightSeg = 20
+        depthSeg = 20
+        break
+      case 'lines':
+        widthSeg = 1
+        heightSeg = Math.floor(THREE.MathUtils.randInt(20, 60))
+        depthSeg = 1
+        break
+      case 'anomaly':
+        widthSeg = Math.floor(THREE.MathUtils.randInt(1, 5))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(1, 5))
+        depthSeg = Math.floor(THREE.MathUtils.randInt(50, 100))
+        break
+      case 'waves':
+        widthSeg = Math.floor(THREE.MathUtils.randInt(30, 50))
+        heightSeg = 1
+        depthSeg = Math.floor(THREE.MathUtils.randInt(30, 50))
+        break
+      case 'spiral':
+        widthSeg = Math.floor(THREE.MathUtils.randInt(10, 15))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(10, 15))
+        depthSeg = Math.floor(THREE.MathUtils.randInt(10, 15))
+        break
+      default:
+        widthSeg = Math.floor(THREE.MathUtils.randInt(5, 20))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(1, 40))
+        depthSeg = Math.floor(THREE.MathUtils.randInt(5, 80))
+    }
+    
     this.geometry = new THREE.BoxGeometry(1, 1, 1, widthSeg, heightSeg, depthSeg)
 
     // Update shader material uniform for offset size with a random value
-    this.material.uniforms.offsetSize.value = Math.floor(THREE.MathUtils.randInt(30, 60))
+    const offsetSize = this.currentMode === 'lines' ? 
+      Math.floor(THREE.MathUtils.randInt(10, 30)) : 
+      Math.floor(THREE.MathUtils.randInt(30, 60))
+    this.material.uniforms.offsetSize.value = offsetSize
     this.material.needsUpdate = true
 
     // Create a container for the points mesh and set its orientation
@@ -80,14 +136,46 @@ export default class ReactiveParticles extends THREE.Object3D {
   }
 
   createCylinderMesh() {
-    // Randomize radial and height segments for the cylinder geometry
-    let radialSeg = Math.floor(THREE.MathUtils.randInt(1, 3))
-    let heightSeg = Math.floor(THREE.MathUtils.randInt(1, 5))
+    let radialSeg, heightSeg
+    
+    switch(this.currentMode) {
+      case 'particles':
+        radialSeg = Math.floor(THREE.MathUtils.randInt(1, 3))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(1, 5))
+        break
+      case 'circles':
+        radialSeg = 4
+        heightSeg = 1
+        break
+      case 'lines':
+        radialSeg = 1
+        heightSeg = Math.floor(THREE.MathUtils.randInt(8, 15))
+        break
+      case 'anomaly':
+        radialSeg = Math.floor(THREE.MathUtils.randInt(1, 2))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(10, 20))
+        break
+      case 'waves':
+        radialSeg = Math.floor(THREE.MathUtils.randInt(3, 6))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(2, 4))
+        break
+      case 'spiral':
+        radialSeg = Math.floor(THREE.MathUtils.randInt(2, 4))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(3, 8))
+        break
+      default:
+        radialSeg = Math.floor(THREE.MathUtils.randInt(1, 3))
+        heightSeg = Math.floor(THREE.MathUtils.randInt(1, 5))
+    }
+    
     this.geometry = new THREE.CylinderGeometry(1, 1, 4, 64 * radialSeg, 64 * heightSeg, true)
 
     // Update shader material uniforms for offset and size with random and fixed values
-    this.material.uniforms.offsetSize.value = Math.floor(THREE.MathUtils.randInt(30, 60))
-    this.material.uniforms.size.value = 2 // Fixed size for uniform appearance
+    const offsetSize = this.currentMode === 'circles' ? 
+      Math.floor(THREE.MathUtils.randInt(50, 80)) : 
+      Math.floor(THREE.MathUtils.randInt(30, 60))
+    this.material.uniforms.offsetSize.value = offsetSize
+    this.material.uniforms.size.value = this.currentMode === 'circles' ? 3 : 2
     this.material.needsUpdate = true
     this.material.uniforms.needsUpdate = true
 
@@ -142,7 +230,12 @@ export default class ReactiveParticles extends THREE.Object3D {
   resetMesh() {
     if (this.properties.autoMix) {
       this.destroyMesh()
-      if (Math.random() < 0.5) {
+      
+      // Choose geometry based on mode
+      const shouldUseCylinder = this.currentMode === 'circles' || 
+        (this.currentMode === 'particles' && Math.random() < 0.5)
+      
+      if (shouldUseCylinder) {
         this.createCylinderMesh()
       } else {
         this.createBoxMesh()
@@ -151,9 +244,13 @@ export default class ReactiveParticles extends THREE.Object3D {
       // Animate the position of the mesh for an elastic movement effect
 
       // Animate the frequency uniform in the material, syncing with BPM if available
+      const frequencyRange = this.currentMode === 'waves' ? 
+        [1, 4] : this.currentMode === 'spiral' ? 
+        [2, 5] : [0.5, 3]
+      
       gsap.to(this.material.uniforms.frequency, {
         duration: App.bpmManager ? (App.bpmManager.getBPMDuration() / 1000) * 2 : 2,
-        value: THREE.MathUtils.randFloat(0.5, 3), // Random frequency value for dynamic visual changes
+        value: THREE.MathUtils.randFloat(frequencyRange[0], frequencyRange[1]),
         ease: 'expo.easeInOut', // Smooth exponential transition for visual effect
       })
     }

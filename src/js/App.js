@@ -66,7 +66,56 @@ export default class App {
     this.particles = new ReativeParticles()
     this.particles.init()
 
+    this.initBottomMenu()
+
     this.update()
+  }
+
+  initBottomMenu() {
+    const bottomMenu = document.getElementById('bottomMenu')
+    bottomMenu.style.display = 'block'
+
+    // Color picker functionality
+    const colorSlider = document.getElementById('colorSlider')
+    const colorIndicator = document.getElementById('colorIndicator')
+    const hexDisplay = document.getElementById('hexDisplay')
+
+    const updateColor = (hue) => {
+      const color = new THREE.Color().setHSL(hue / 360, 1, 0.5)
+      const hexColor = '#' + color.getHexString().toUpperCase()
+      
+      colorIndicator.style.background = hexColor
+      hexDisplay.textContent = hexColor
+      
+      // Update particle colors in real-time
+      if (this.particles) {
+        this.particles.updateColors(color)
+      }
+    }
+
+    colorSlider.addEventListener('input', (e) => {
+      updateColor(parseInt(e.target.value))
+    })
+
+    // Mode buttons functionality
+    const modeButtons = document.querySelectorAll('.mode-btn')
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all buttons
+        modeButtons.forEach(b => b.classList.remove('active'))
+        // Add active class to clicked button
+        btn.classList.add('active')
+        
+        // Update visualizer mode
+        const mode = btn.dataset.mode
+        if (this.particles) {
+          this.particles.setMode(mode)
+        }
+      })
+    })
+
+    // Initialize with default color
+    updateColor(300)
   }
 
   resize() {

@@ -149,5 +149,121 @@ a:focus-visible {
   }
 }
 
+.bottom-menu {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+
+.color-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.color-label {
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.color-picker-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.color-indicator {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ff00ff;
+  border: 2px solid white;
+  flex-shrink: 0;
+}
+
+.color-slider {
+  width: 200px;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, 
+    #ff0000 0%, 
+    #ffff00 16.66%, 
+    #00ff00 33.33%, 
+    #00ffff 50%, 
+    #0000ff 66.66%, 
+    #ff00ff 83.33%, 
+    #ff0000 100%);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.color-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #333;
+  cursor: pointer;
+}
+
+.color-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #333;
+  cursor: pointer;
+}
+
+.hex-display {
+  color: white;
+  font-family: monospace;
+  font-size: 12px;
+  min-width: 60px;
+}
+
+.modes-section {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.mode-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mode-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.mode-btn.active {
+  background: #6b46c1;
+  border-color: #6b46c1;
+  color: white;
+}
+
 @media screen and (min-width: 53em) {
 }
