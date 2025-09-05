@@ -27,6 +27,10 @@ export default class App {
     this.mediaRecorder = null
     this.recordedChunks = []
     this.isRecording = false
+    
+    // Mouse tracking variables
+    this.isMouseTrackingActive = false
+    this.onMouseMoveBinder = (e) => this.onMouseMove(e)
   }
 
   init() {
@@ -115,6 +119,9 @@ export default class App {
     this.particles = new ReativeParticles()
     this.particles.init()
 
+    // Enable mouse tracking by default
+    this.enableMouseTracking()
+
     this.initBottomMenu()
     this.initTopMenu()
 
@@ -193,6 +200,9 @@ export default class App {
         webcamBtn.classList.add('active')
         span.textContent = 'Webcam Active'
         
+        // Disable mouse tracking when hand tracking is active
+        this.disableMouseTracking()
+        
         // Also start the webcam preview
         if (App.webcamPositionManager) {
           await App.webcamPositionManager.startWebcam()
@@ -214,12 +224,45 @@ export default class App {
       webcamBtn.classList.remove('active')
       span.textContent = 'Activate Webcam'
       
+      // Re-enable mouse tracking when hand tracking stops
+      this.enableMouseTracking()
+      
       // Also stop the webcam preview
       if (App.webcamPositionManager) {
         App.webcamPositionManager.stopWebcam()
       }
       
       console.log('Hand tracking deactivated')
+    }
+  }
+
+  enableMouseTracking() {
+    if (!this.isMouseTrackingActive) {
+      window.addEventListener('mousemove', this.onMouseMoveBinder)
+      this.isMouseTrackingActive = true
+      console.log('Mouse tracking enabled')
+    }
+  }
+
+  disableMouseTracking() {
+    if (this.isMouseTrackingActive) {
+      window.removeEventListener('mousemove', this.onMouseMoveBinder)
+      this.isMouseTrackingActive = false
+      console.log('Mouse tracking disabled')
+    }
+  }
+
+  onMouseMove(event) {
+    if (this.particles && this.particles.material) {
+      // Convert mouse coordinates to normalized values (0-1)
+      const normalizedX = event.clientX / window.innerWidth
+      const normalizedY = event.clientY / window.innerHeight
+      
+      // Update finger position for paint gesture effect
+      this.particles.updateFingerPosition(normalizedX, normalizedY)
+      
+      // Update conductor Y position based on mouse Y
+      this.particles.updateConductorY(normalizedY)
     }
   }
 
