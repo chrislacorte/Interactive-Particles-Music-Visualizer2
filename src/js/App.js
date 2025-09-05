@@ -5,6 +5,7 @@ import BPMManager from './managers/BPMManager'
 import AudioManager from './managers/AudioManager'
 import HandTrackingManager from './managers/HandTrackingManager'
 import FileUploadManager from './managers/FileUploadManager'
+import WebcamPositionManager from './managers/WebcamPositionManager'
 
 export default class App {
   //THREE objects
@@ -16,6 +17,7 @@ export default class App {
   static bpmManager = null
   static handTrackingManager = null
   static fileUploadManager = null
+  static webcamPositionManager = null
 
   constructor() {
     this.onClickBinder = () => this.init()
@@ -81,6 +83,10 @@ export default class App {
     App.handTrackingManager = new HandTrackingManager()
     await App.handTrackingManager.init()
     
+    // Initialize webcam position manager
+    App.webcamPositionManager = new WebcamPositionManager()
+    App.webcamPositionManager.init()
+    
     // Add hand tracking event listeners
     App.handTrackingManager.addEventListener('conductorGesture', (event) => {
       this.onConductorGesture(event)
@@ -89,6 +95,11 @@ export default class App {
     App.handTrackingManager.addEventListener('zoomGesture', (event) => {
       this.onZoomGesture(event)
     })
+    
+    // Add webcam position manager event listeners if needed
+    // App.webcamPositionManager.addEventListener('positionChanged', (event) => {
+    //   console.log('Webcam position changed:', event)
+    // })
     App.audioManager.play()
 
     this.particles = new ReativeParticles()
@@ -171,6 +182,12 @@ export default class App {
         await App.handTrackingManager.start()
         webcamBtn.classList.add('active')
         span.textContent = 'Webcam Active'
+        
+        // Also start the webcam preview
+        if (App.webcamPositionManager) {
+          await App.webcamPositionManager.startWebcam()
+        }
+        
         console.log('Hand tracking activated')
       } catch (error) {
         console.error('Failed to start webcam:', error)
@@ -186,6 +203,12 @@ export default class App {
       App.handTrackingManager.stop()
       webcamBtn.classList.remove('active')
       span.textContent = 'Activate Webcam'
+      
+      // Also stop the webcam preview
+      if (App.webcamPositionManager) {
+        App.webcamPositionManager.stopWebcam()
+      }
+      
       console.log('Hand tracking deactivated')
     }
   }
