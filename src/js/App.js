@@ -31,6 +31,8 @@ export default class App {
     // Mouse tracking variables
     this.isMouseTrackingActive = false
     this.onMouseMoveBinder = (e) => this.onMouseMove(e)
+    this.onMouseWheelBinder = (e) => this.onMouseWheel(e)
+    this.onClickInteractionBinder = (e) => this.onClickInteraction(e)
   }
 
   init() {
@@ -239,6 +241,8 @@ export default class App {
   enableMouseTracking() {
     if (!this.isMouseTrackingActive) {
       window.addEventListener('mousemove', this.onMouseMoveBinder)
+      window.addEventListener('wheel', this.onMouseWheelBinder)
+      window.addEventListener('click', this.onClickInteractionBinder)
       this.isMouseTrackingActive = true
       console.log('Mouse tracking enabled')
     }
@@ -247,6 +251,8 @@ export default class App {
   disableMouseTracking() {
     if (this.isMouseTrackingActive) {
       window.removeEventListener('mousemove', this.onMouseMoveBinder)
+      window.removeEventListener('wheel', this.onMouseWheelBinder)
+      window.removeEventListener('click', this.onClickInteractionBinder)
       this.isMouseTrackingActive = false
       console.log('Mouse tracking disabled')
     }
@@ -266,6 +272,74 @@ export default class App {
     }
   }
 
+  onMouseWheel(event) {
+    // Prevent default scroll behavior
+    event.preventDefault()
+    
+    if (this.camera) {
+      // Calculate zoom speed and direction
+      const zoomSpeed = 0.5
+      const minZ = 5
+      const maxZ = 20
+      
+      // Get zoom direction from wheel delta
+      const zoomDirection = event.deltaY > 0 ? 1 : -1
+      
+      // Calculate new camera position
+      let newZ = this.camera.position.z + (zoomDirection * zoomSpeed)
+      
+      // Clamp the zoom level
+      newZ = Math.max(minZ, Math.min(maxZ, newZ))
+      this.camera.position.z = newZ
+      
+      console.log('Mouse wheel zoom:', newZ)
+    }
+  }
+
+  onClickInteraction(event) {
+    // Skip if this is the initial click to start the app
+    if (!this.particles || !this.particles.material) {
+      return
+    }
+    
+    // Convert mouse coordinates to normalized values (0-1)
+    const normalizedX = event.clientX / window.innerWidth
+    const normalizedY = event.clientY / window.innerHeight
+    
+    // Apply interaction based on current mode
+    if (this.particles.currentMode === 'paint') {
+      // Simulate finger paint gesture at click position
+      this.particles.updateFingerPosition(normalizedX, normalizedY)
+      console.log('Click paint interaction at:', normalizedX, normalizedY)
+      
+      // Create a brief visual feedback by temporarily increasing paint strength
+      const originalStrength = this.particles.material.uniforms.u_paintStrength.value
+      this.particles.material.uniforms.u_paintStrength.value = Math.min(originalStrength * 2, 1.0)
+      
+      // Reset strength after a short delay
+      setTimeout(() => {
+        if (this.particles && this.particles.material) {
+          this.particles.material.uniforms.u_paintStrength.value = originalStrength
+        }
+      }, 200)
+      
+    } else if (this.particles.currentMode === 'conductor') {
+      // Simulate conductor gesture at click Y position
+      this.particles.updateConductorY(normalizedY)
+      console.log('Click conductor interaction at Y:', normalizedY)
+      
+      // Create a brief wave pulse effect
+      const originalAmplitude = this.particles.material.uniforms.amplitude.value
+      this.particles.material.uniforms.amplitude.value = Math.min(originalAmplitude * 1.5, 2.0)
+      
+      // Reset amplitude after a short delay
+      setTimeout(() => {
+        if (this.particles && this.particles.material) {
+          this.particles.material.uniforms.amplitude.value = originalAmplitude
+        }
+      }, 300)
+    }
+  }
   onConductorGesture(event) {
     if (this.particles && this.particles.material) {
       // Update conductorY uniform for the conductor mode
