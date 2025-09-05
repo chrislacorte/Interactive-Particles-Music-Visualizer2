@@ -57,17 +57,22 @@
       </div>
       
       <!-- Top Menu -->
-      <div class="top-menu" id="topMenu" style="display: none;">
-        <button class="webcam-btn" id="webcamBtn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-          </svg>
-          <span>Activate Webcam</span>
-        </button>
-      </div>
       
       <div class="bottom-menu" id="bottomMenu" style="display: none;">
+        <div class="webcam-section">
+          <button class="webcam-btn" id="webcamBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span>Webcam Active</span>
+          </button>
+          <div class="webcam-options" id="webcamOptions" style="display: none;">
+            <button class="option-btn" id="backgroundBtn">Use as Background</button>
+            <button class="option-btn" id="smallWindowBtn">Small Window</button>
+            <button class="option-btn" id="handTrackingBtn">Show Hand Tracking</button>
+          </div>
+        </div>
         <div class="color-section">
           <div class="color-label">Color Selection</div>
           <div class="color-pickers-wrapper">
@@ -90,6 +95,13 @@
           <button class="mode-btn" data-mode="spiral">Spiral</button>
         </div>
       </div>
+      
+      <!-- Webcam Views -->
+      <div class="webcam-background" id="webcamBackground" style="display: none;"></div>
+      <div class="webcam-small-window" id="webcamSmallWindow" style="display: none;">
+        <div class="webcam-small-content"></div>
+      </div>
+      <canvas class="hand-tracking-overlay" id="handTrackingOverlay" style="display: none;"></canvas>
       
       <!-- Hex Color Input Tooltip -->
       <div class="hex-tooltip" id="hexTooltip" style="display: none;">
