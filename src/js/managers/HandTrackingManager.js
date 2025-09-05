@@ -54,6 +54,9 @@ export default class HandTrackingManager extends EventDispatcher {
 
       this.hands.onResults(this.onResults.bind(this))
 
+      // Wait for MediaPipe Hands to fully initialize
+      await this.hands.initialize()
+
       console.log('HandTrackingManager initialized successfully')
       return true
     } catch (error) {
