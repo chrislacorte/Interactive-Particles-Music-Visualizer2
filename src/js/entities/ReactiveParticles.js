@@ -19,10 +19,6 @@ export default class ReactiveParticles extends THREE.Object3D {
       paintStrength: 0.5, // Strength of influence for paint mode
       conductorWaveStrength: 1.0, // Amplitude of wave for conductor mode
       conductorWaveFrequency: 5.0, // Frequency of wave for conductor mode
-      paintRadius: 0.5, // Radius of influence for paint mode
-      paintStrength: 0.5, // Strength of influence for paint mode
-      conductorWaveStrength: 1.0, // Amplitude of wave for conductor mode
-      conductorWaveFrequency: 5.0, // Frequency of wave for conductor mode
     }
   }
 
@@ -47,12 +43,6 @@ export default class ReactiveParticles extends THREE.Object3D {
         maxDistance: { value: 1.8 },
         startColor: { value: new THREE.Color(this.properties.startColor) },
         endColor: { value: new THREE.Color(this.properties.endColor) },
-        // New uniforms for gesture modes
-        u_mode: { value: 0 }, // 0: normal, 1: paint, 2: conductor
-        u_fingerPosition: { value: new THREE.Vector2(0.5, 0.5) },
-        u_paintRadius: { value: this.properties.paintRadius },
-        u_paintStrength: { value: this.properties.paintStrength },
-        u_conductorY: { value: 0.5 },
         // New uniforms for gesture modes
         u_mode: { value: 0 }, // 0: normal, 1: paint, 2: conductor
         u_fingerPosition: { value: new THREE.Vector2(0.5, 0.5) },
