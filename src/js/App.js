@@ -81,24 +81,13 @@ export default class App {
     this.particles.init()
 
     this.initBottomMenu()
-    this.initTopMenu()
 
     this.update()
   }
 
-  initTopMenu() {
-    const topMenu = document.getElementById('topMenu')
-    const webcamBtn = document.getElementById('webcamBtn')
-    
-    topMenu.style.display = 'block'
-    
-    webcamBtn.addEventListener('click', () => {
-      this.toggleWebcam()
-    })
-  }
-
   async toggleWebcam() {
     const webcamBtn = document.getElementById('webcamBtn')
+    const webcamOptions = document.getElementById('webcamOptions')
     const span = webcamBtn.querySelector('span')
     
     if (!App.handTrackingManager.isHandTrackingActive()) {
@@ -110,12 +99,13 @@ export default class App {
         await App.handTrackingManager.start()
         webcamBtn.classList.add('active')
         span.textContent = 'Webcam Active'
+        webcamOptions.style.display = 'flex'
         console.log('Hand tracking activated')
       } catch (error) {
         console.error('Failed to start webcam:', error)
         span.textContent = 'Failed to Start'
         setTimeout(() => {
-          span.textContent = 'Activate Webcam'
+          span.textContent = 'Webcam Active'
         }, 2000)
       }
       
@@ -124,8 +114,52 @@ export default class App {
       // Stop webcam
       App.handTrackingManager.stop()
       webcamBtn.classList.remove('active')
-      span.textContent = 'Activate Webcam'
+      span.textContent = 'Webcam Active'
+      webcamOptions.style.display = 'none'
+      this.hideAllWebcamViews()
       console.log('Hand tracking deactivated')
+    }
+  }
+
+  hideAllWebcamViews() {
+    document.getElementById('webcamBackground').style.display = 'none'
+    document.getElementById('webcamSmallWindow').style.display = 'none'
+    App.handTrackingManager.setShowHandTracking(false)
+    
+    // Remove active states
+    document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('active'))
+  }
+
+  setupWebcamView(mode) {
+    const videoElement = document.getElementById('webcam')
+    if (!videoElement || !videoElement.srcObject) return
+
+    // Hide all views first
+    this.hideAllWebcamViews()
+
+    switch(mode) {
+      case 'background':
+        const backgroundDiv = document.getElementById('webcamBackground')
+        backgroundDiv.innerHTML = ''
+        const bgVideo = videoElement.cloneNode(true)
+        bgVideo.style.transform = 'scaleX(-1)' // Mirror the video
+        backgroundDiv.appendChild(bgVideo)
+        backgroundDiv.style.display = 'block'
+        break
+        
+      case 'small':
+        const smallWindow = document.getElementById('webcamSmallWindow')
+        const smallContent = smallWindow.querySelector('.webcam-small-content')
+        smallContent.innerHTML = ''
+        const smallVideo = videoElement.cloneNode(true)
+        smallVideo.style.transform = 'scaleX(-1)' // Mirror the video
+        smallContent.appendChild(smallVideo)
+        smallWindow.style.display = 'block'
+        break
+        
+      case 'tracking':
+        App.handTrackingManager.setShowHandTracking(true)
+        break
     }
   }
 
@@ -175,6 +209,42 @@ export default class App {
     const bottomMenu = document.getElementById('bottomMenu')
     bottomMenu.style.display = 'block'
 
+    // Webcam functionality
+    const webcamBtn = document.getElementById('webcamBtn')
+    const backgroundBtn = document.getElementById('backgroundBtn')
+    const smallWindowBtn = document.getElementById('smallWindowBtn')
+    const handTrackingBtn = document.getElementById('handTrackingBtn')
+    
+    webcamBtn.addEventListener('click', () => {
+      this.toggleWebcam()
+    })
+    
+    backgroundBtn.addEventListener('click', () => {
+      backgroundBtn.classList.toggle('active')
+      if (backgroundBtn.classList.contains('active')) {
+        this.setupWebcamView('background')
+      } else {
+        document.getElementById('webcamBackground').style.display = 'none'
+      }
+    })
+    
+    smallWindowBtn.addEventListener('click', () => {
+      smallWindowBtn.classList.toggle('active')
+      if (smallWindowBtn.classList.contains('active')) {
+        this.setupWebcamView('small')
+      } else {
+        document.getElementById('webcamSmallWindow').style.display = 'none'
+      }
+    })
+    
+    handTrackingBtn.addEventListener('click', () => {
+      handTrackingBtn.classList.toggle('active')
+      if (handTrackingBtn.classList.contains('active')) {
+        this.setupWebcamView('tracking')
+      } else {
+        App.handTrackingManager.setShowHandTracking(false)
+      }
+    })
     // Color picker functionality for both sliders
     const colorSlider1 = document.getElementById('colorSlider1')
     const colorIndicator1 = document.getElementById('colorIndicator1')

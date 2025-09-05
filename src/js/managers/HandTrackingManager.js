@@ -13,6 +13,9 @@ export default class HandTrackingManager extends EventDispatcher {
     this.previousZoomDistance = null
     this.smoothedConductor = 0
     this.smoothedZoom = 1
+    this.handTrackingCanvas = null
+    this.handTrackingCtx = null
+    this.showHandTracking = false
     
     // Gesture thresholds
     this.conductorThreshold = 0.02
@@ -25,10 +28,15 @@ export default class HandTrackingManager extends EventDispatcher {
       // Get video and canvas elements
       this.videoElement = document.getElementById('webcam')
       this.canvasElement = document.getElementById('handCanvas')
+      this.handTrackingCanvas = document.getElementById('handTrackingOverlay')
       
-      if (!this.videoElement || !this.canvasElement) {
-        throw new Error('Video or canvas element not found')
+      if (!this.videoElement || !this.canvasElement || !this.handTrackingCanvas) {
+        throw new Error('Required elements not found')
       }
+
+      this.handTrackingCtx = this.handTrackingCanvas.getContext('2d')
+      this.resizeHandTrackingCanvas()
+      window.addEventListener('resize', () => this.resizeHandTrackingCanvas())
 
       // Initialize MediaPipe Hands
       this.hands = new Hands({
@@ -51,6 +59,23 @@ export default class HandTrackingManager extends EventDispatcher {
     } catch (error) {
       console.error('Failed to initialize HandTrackingManager:', error)
       return false
+    }
+  }
+
+  resizeHandTrackingCanvas() {
+    if (this.handTrackingCanvas) {
+      this.handTrackingCanvas.width = window.innerWidth
+      this.handTrackingCanvas.height = window.innerHeight
+    }
+  }
+
+  setShowHandTracking(show) {
+    this.showHandTracking = show
+    if (this.handTrackingCanvas) {
+      this.handTrackingCanvas.style.display = show ? 'block' : 'none'
+    }
+    if (!show && this.handTrackingCtx) {
+      this.handTrackingCtx.clearRect(0, 0, this.handTrackingCanvas.width, this.handTrackingCanvas.height)
     }
   }
 
@@ -118,10 +143,19 @@ export default class HandTrackingManager extends EventDispatcher {
 
   onResults(results) {
     if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+      // Clear hand tracking visualization when no hands detected
+      if (this.showHandTracking && this.handTrackingCtx) {
+        this.handTrackingCtx.clearRect(0, 0, this.handTrackingCanvas.width, this.handTrackingCanvas.height)
+      }
       return
     }
 
     const hands = results.multiHandLandmarks
+    
+    // Draw hand tracking visualization
+    if (this.showHandTracking) {
+      this.drawHandTracking(hands)
+    }
     
     // Process conductor gesture (vertical hand movement)
     this.processConductorGesture(hands)
@@ -190,6 +224,63 @@ export default class HandTrackingManager extends EventDispatcher {
     }
 
     this.previousZoomDistance = distance
+  }
+
+  drawHandTracking(hands) {
+    if (!this.handTrackingCtx) return
+
+    // Clear previous frame
+    this.handTrackingCtx.clearRect(0, 0, this.handTrackingCanvas.width, this.handTrackingCanvas.height)
+
+    hands.forEach((hand, handIndex) => {
+      // Draw hand landmarks
+      hand.forEach((landmark, index) => {
+        const x = landmark.x * this.handTrackingCanvas.width
+        const y = landmark.y * this.handTrackingCanvas.height
+
+        // Draw landmark points
+        this.handTrackingCtx.beginPath()
+        this.handTrackingCtx.arc(x, y, 4, 0, 2 * Math.PI)
+        this.handTrackingCtx.fillStyle = handIndex === 0 ? '#00ff00' : '#ff0000'
+        this.handTrackingCtx.fill()
+
+        // Highlight important landmarks
+        if (index === 4 || index === 8) { // Thumb tip and index tip
+          this.handTrackingCtx.beginPath()
+          this.handTrackingCtx.arc(x, y, 8, 0, 2 * Math.PI)
+          this.handTrackingCtx.strokeStyle = '#ffffff'
+          this.handTrackingCtx.lineWidth = 2
+          this.handTrackingCtx.stroke()
+        }
+      })
+
+      // Draw connections between landmarks
+      const connections = [
+        [0, 1], [1, 2], [2, 3], [3, 4], // Thumb
+        [0, 5], [5, 6], [6, 7], [7, 8], // Index
+        [5, 9], [9, 10], [10, 11], [11, 12], // Middle
+        [9, 13], [13, 14], [14, 15], [15, 16], // Ring
+        [13, 17], [17, 18], [18, 19], [19, 20], // Pinky
+        [0, 17] // Palm
+      ]
+
+      this.handTrackingCtx.strokeStyle = handIndex === 0 ? '#00ff0080' : '#ff000080'
+      this.handTrackingCtx.lineWidth = 2
+
+      connections.forEach(([start, end]) => {
+        if (hand[start] && hand[end]) {
+          const startX = hand[start].x * this.handTrackingCanvas.width
+          const startY = hand[start].y * this.handTrackingCanvas.height
+          const endX = hand[end].x * this.handTrackingCanvas.width
+          const endY = hand[end].y * this.handTrackingCanvas.height
+
+          this.handTrackingCtx.beginPath()
+          this.handTrackingCtx.moveTo(startX, startY)
+          this.handTrackingCtx.lineTo(endX, endY)
+          this.handTrackingCtx.stroke()
+        }
+      })
+    })
   }
 
   lerp(start, end, factor) {
