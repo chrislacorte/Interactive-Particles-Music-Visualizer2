@@ -4,6 +4,7 @@ import * as dat from 'dat.gui'
 import BPMManager from './managers/BPMManager'
 import AudioManager from './managers/AudioManager'
 import HandTrackingManager from './managers/HandTrackingManager'
+import FileUploadManager from './managers/FileUploadManager'
 
 export default class App {
   //THREE objects
@@ -14,6 +15,7 @@ export default class App {
   static audioManager = null
   static bpmManager = null
   static handTrackingManager = null
+  static fileUploadManager = null
 
   constructor() {
     this.onClickBinder = () => this.init()
@@ -55,6 +57,18 @@ export default class App {
     App.audioManager = new AudioManager()
     await App.audioManager.loadAudioBuffer()
 
+    // Initialize file upload manager
+    App.fileUploadManager = new FileUploadManager()
+    App.fileUploadManager.init()
+    
+    // Make it globally accessible for onclick handlers
+    window.fileUploadManager = App.fileUploadManager
+    
+    // Listen for file selection events
+    App.fileUploadManager.addEventListener('fileSelected', (event) => {
+      this.loadUserAudio(event.file)
+    })
+
     App.bpmManager = new BPMManager()
     App.bpmManager.addEventListener('beat', () => {
       this.particles.onBPMBeat()
@@ -84,6 +98,48 @@ export default class App {
     this.initTopMenu()
 
     this.update()
+  }
+
+  async loadUserAudio(file) {
+    try {
+      // Stop current audio
+      if (App.audioManager.isPlaying) {
+        App.audioManager.pause()
+      }
+
+      // Load the new audio file
+      const audioListener = new THREE.AudioListener()
+      const newAudio = new THREE.Audio(audioListener)
+      const audioLoader = new THREE.AudioLoader()
+
+      // Convert file to audio buffer
+      const arrayBuffer = await file.url ? 
+        fetch(file.url).then(r => r.arrayBuffer()) : 
+        new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onload = (e) => resolve(e.target.result)
+          reader.readAsArrayBuffer(file)
+        })
+
+      const audioBuffer = await App.audioManager.audioContext.decodeAudioData(arrayBuffer)
+      
+      // Update audio manager with new file
+      App.audioManager.audio.setBuffer(audioBuffer)
+      App.audioManager.audio.setLoop(true)
+      App.audioManager.audio.setVolume(0.5)
+      
+      // Re-detect BPM for the new track
+      await App.bpmManager.detectBPM(audioBuffer)
+      
+      // Start playing the new track
+      App.audioManager.play()
+      
+      console.log(`Now playing: ${file.name}`)
+      
+    } catch (error) {
+      console.error('Failed to load user audio:', error)
+      App.fileUploadManager.showError('Failed to load audio file. Please try again.')
+    }
   }
 
   initTopMenu() {
