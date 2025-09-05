@@ -169,7 +169,7 @@ a:focus-visible {
 .color-section {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0px;
 }
 
 .color-label {
@@ -184,6 +184,7 @@ a:focus-visible {
   flex-direction: row;
   gap: 20px;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .color-picker-container {
