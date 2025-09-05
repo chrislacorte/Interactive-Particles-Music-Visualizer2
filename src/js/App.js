@@ -288,16 +288,64 @@ export default class App {
         // Hide UI elements
         bottomMenu.classList.add('hidden')
         topMenu.classList.add('hidden')
+        document.getElementById('showUIBtn').style.display = 'flex'
       } else {
         // Show UI elements
         bottomMenu.classList.remove('hidden')
         topMenu.classList.remove('hidden')
+        document.getElementById('showUIBtn').style.display = 'none'
       }
     })
 
+    // Show UI button functionality
+    const showUIBtn = document.getElementById('showUIBtn')
+    showUIBtn.addEventListener('click', () => {
+      // Show UI elements
+      bottomMenu.classList.remove('hidden')
+      topMenu.classList.remove('hidden')
+      showUIBtn.style.display = 'none'
+      
+      // Uncheck the hide toggle
+      hideToggle.checked = false
+    })
+
     // Upload button functionality
+    const uploadBtns = document.querySelectorAll('#uploadBtn')
+    uploadBtns.forEach(uploadBtn => {
+      uploadBtn.addEventListener('click', () => {
+        if (App.fileUploadManager) {
+          App.fileUploadManager.showUploadModal()
+        }
+    })
+
+    // Gesture info button functionality
+    const gestureInfoBtn = document.getElementById('gestureInfoBtn')
+    gestureInfoBtn.addEventListener('click', () => {
+      const slideout = document.getElementById('gestureSlideout')
+      slideout.classList.toggle('open')
+    })
+
+    // Close gesture slideout
+    const closeGesture = document.getElementById('closeGesture')
+    closeGesture.addEventListener('click', () => {
+      const slideout = document.getElementById('gestureSlideout')
+      slideout.classList.remove('open')
+    })
+
+    // Close slideout when clicking outside
+    document.addEventListener('click', (e) => {
+      const slideout = document.getElementById('gestureSlideout')
+      const gestureBtn = document.getElementById('gestureInfoBtn')
+      
+      if (!slideout.contains(e.target) && !gestureBtn.contains(e.target)) {
+        slideout.classList.remove('open')
+      }
+    })
+
+    // Upload button functionality (single event listener)
     const uploadBtn = document.getElementById('uploadBtn')
-    uploadBtn.addEventListener('click', () => {
+    if (uploadBtn) {
+      uploadBtn.addEventListener('click', () => {
       if (App.fileUploadManager) {
         App.fileUploadManager.showUploadModal()
       }
