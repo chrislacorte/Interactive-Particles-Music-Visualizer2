@@ -176,12 +176,20 @@ a:focus-visible {
 }
 
 .menu-row-1 {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 16px;
   width: 100%;
   min-height: 44px;
+}
+
+.playback-controls {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .toggle-container {
@@ -625,6 +633,7 @@ input:checked + .toggle-slider:before {
   
   .menu-row-1 {
     gap: 12px;
+    grid-template-columns: auto 1fr auto;
   }
   
   .toggle-container {
@@ -666,19 +675,15 @@ input:checked + .toggle-slider:before {
   }
   
   .upload-btn {
-    padding: 10px 16px;
-    font-size: 13px;
+    padding: 8px 12px;
+    font-size: 11px;
+    gap: 6px;
+  }
+  
+  .upload-btn span {
+    display: none;
   }
 }
-/* Upload Feature Styles */
-.playback-controls {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  align-items: center;
-  flex-shrink: 0;
-}
-
 .playback-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -711,29 +716,23 @@ input:checked + .toggle-slider:before {
   height: 14px;
 }
 
-.upload-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
 .upload-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
-  padding: 12px 20px;
+  padding: 10px 16px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 44px;
   min-height: 44px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .upload-btn:hover {
