@@ -177,7 +177,7 @@ a:focus-visible {
 
 .menu-row-1 {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 16px;
   width: 100%;
@@ -486,6 +486,13 @@ input:checked + .toggle-slider:before {
   padding: 8px 0;
 }
 
+.hide-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+}
+
 .mode-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -555,7 +562,7 @@ input:checked + .toggle-slider:before {
 @media screen and (max-width: 480px) {
   .bottom-menu {
     padding: 16px 20px;
-    gap: 20px;
+    gap: 24px;
     max-width: 95vw;
   }
   
@@ -1216,7 +1223,7 @@ input:checked + .toggle-slider:before {
 .webcam-menu-content {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 48px;
   backdrop-filter: blur(20px);
 }
 
