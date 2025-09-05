@@ -228,6 +228,11 @@ export default class App {
       // Update conductorY uniform for the conductor mode
       this.particles.updateConductorY(event.y)
 
+      // Debug logging for conductor mode
+      if (this.particles.currentMode === 'conductor') {
+        console.log('Conductor gesture Y:', event.y)
+      }
+
       // Existing audio reactivity based on intensity (can be blended or overridden by specific modes)
       if (App.audioManager?.isPlaying) {
         const intensity = Math.min(event.intensity, 2.0) // Cap the intensity
@@ -243,6 +248,11 @@ export default class App {
     if (this.particles && this.particles.material) {
       // Update finger position uniform for the paint mode
       this.particles.updateFingerPosition(event.x, event.y)
+      
+      // Debug logging for paint mode
+      if (this.particles.currentMode === 'paint') {
+        console.log('Paint gesture:', event.x, event.y)
+      }
     }
   }
 

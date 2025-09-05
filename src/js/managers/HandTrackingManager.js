@@ -145,11 +145,12 @@ export default class HandTrackingManager extends EventDispatcher {
   }
 
   onResults(results) {
+    // Always clear previous tracking data first
+    if (this.showHandTracking && this.handTrackingCtx) {
+      this.handTrackingCtx.clearRect(0, 0, this.handTrackingCanvas.width, this.handTrackingCanvas.height)
+    }
+    
     if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
-      // Clear hand tracking visualization when no hands detected
-      if (this.showHandTracking && this.handTrackingCtx) {
-        this.handTrackingCtx.clearRect(0, 0, this.handTrackingCanvas.width, this.handTrackingCanvas.height)
-      }
       return
     }
 
@@ -178,18 +179,22 @@ export default class HandTrackingManager extends EventDispatcher {
     const wrist = hand[0] // WRIST landmark
     const currentY = wrist.y
     
+    // Initialize smoothed value if not set
+    if (this.smoothedConductorY === undefined) {
+      this.smoothedConductorY = currentY
+    }
+    
     // Smooth the current Y position for conductor mode
-    this.smoothedConductorY = this.lerp(this.smoothedConductorY || currentY, currentY, this.smoothingFactor);
+    this.smoothedConductorY = this.lerp(this.smoothedConductorY, currentY, this.smoothingFactor)
 
     this.dispatchEvent({
       type: 'conductorGesture',
       y: this.smoothedConductorY, // Normalized Y position (0 to 1)
-      // Also include intensity and direction for general reactivity if needed
       intensity: this.previousHandY !== null ? Math.abs(currentY - this.previousHandY) * 10 : 0,
       direction: this.previousHandY !== null ? (currentY - this.previousHandY > 0 ? 'down' : 'up') : 'none'
-    });
+    })
 
-    this.previousHandY = currentY;
+    this.previousHandY = currentY
   }
 
   processFingerPaintGesture(hands) {
@@ -198,10 +203,17 @@ export default class HandTrackingManager extends EventDispatcher {
     const hand = hands[0]
     const indexTip = hand[8] // INDEX_FINGER_TIP
 
+    // Dispatch the gesture event with normalized coordinates
     this.dispatchEvent({
       type: 'fingerPaintGesture',
       x: indexTip.x,
-      y: indexTip.y
+      y: indexTip.y,
+      // Add debug info
+      debug: {
+        rawX: indexTip.x,
+        rawY: indexTip.y,
+        handDetected: true
+      }
     })
   }
 

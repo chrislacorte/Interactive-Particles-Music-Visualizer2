@@ -76,22 +76,41 @@ export default class ReactiveParticles extends THREE.Object3D {
   }
 
   updateFingerPosition(x, y) {
-    this.material.uniforms.u_fingerPosition.value.set(x, y)
+    // Ensure the uniform exists and update it
+    if (this.material && this.material.uniforms && this.material.uniforms.u_fingerPosition) {
+      this.material.uniforms.u_fingerPosition.value.set(x, y)
+      // Force uniform update
+      this.material.uniformsNeedUpdate = true
+    }
   }
 
   updateConductorY(y) {
-    this.material.uniforms.u_conductorY.value = y
+    // Ensure the uniform exists and update it
+    if (this.material && this.material.uniforms && this.material.uniforms.u_conductorY) {
+      this.material.uniforms.u_conductorY.value = y
+      // Force uniform update
+      this.material.uniformsNeedUpdate = true
+    }
   }
 
   setMode(mode) {
     this.currentMode = mode
+    console.log('Setting mode to:', mode)
+    
     // Map mode string to integer for shader uniform
     const modeMap = {
       'particles': 0, 'circles': 0, 'lines': 0, 'anomaly': 0, 'waves': 0, 'spiral': 0,
       'paint': 1,
       'conductor': 2
     }
-    this.material.uniforms.u_mode.value = modeMap[mode] || 0 // Default to 0 if mode not found
+    
+    const modeValue = modeMap[mode] || 0
+    console.log('Mode value for shader:', modeValue)
+    
+    if (this.material && this.material.uniforms && this.material.uniforms.u_mode) {
+      this.material.uniforms.u_mode.value = modeValue
+      this.material.uniformsNeedUpdate = true
+    }
 
     this.resetMesh()
   }
