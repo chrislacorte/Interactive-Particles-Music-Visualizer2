@@ -468,6 +468,7 @@ export default class App {
 
     // Mode buttons functionality
     const modeButtons = document.querySelectorAll('.mode-btn')
+    const currentModeDisplay = document.getElementById('currentModeDisplay')
     
     modeButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -478,6 +479,11 @@ export default class App {
         
         // Update visualizer mode
         const mode = btn.dataset.mode
+        
+        // Update current mode display
+        if (currentModeDisplay) {
+          currentModeDisplay.textContent = mode.charAt(0).toUpperCase() + mode.slice(1)
+        }
         
         if (this.particles) {
           this.particles.setMode(mode)
