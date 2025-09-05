@@ -295,23 +295,11 @@ export default class App {
       }
     })
 
-    // Gesture info button
-    const gestureInfoBtn = document.getElementById('gestureInfoBtn')
-    const gestureSlideout = document.getElementById('gestureSlideout')
-    const closeGesture = document.getElementById('closeGesture')
-    
-    gestureInfoBtn.addEventListener('click', () => {
-      gestureSlideout.classList.add('open')
-    })
-    
-    closeGesture.addEventListener('click', () => {
-      gestureSlideout.classList.remove('open')
-    })
-    
-    // Close slideout when clicking outside
-    gestureSlideout.addEventListener('click', (e) => {
-      if (e.target === gestureSlideout) {
-        gestureSlideout.classList.remove('open')
+    // Upload button functionality
+    const uploadBtn = document.getElementById('uploadBtn')
+    uploadBtn.addEventListener('click', () => {
+      if (App.fileUploadManager) {
+        App.fileUploadManager.showUploadModal()
       }
     })
 

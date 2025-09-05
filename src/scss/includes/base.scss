@@ -526,6 +526,37 @@ input:checked + .toggle-slider:before {
   flex-shrink: 0;
 }
 
+.upload-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.upload-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.upload-btn svg {
+  flex-shrink: 0;
+}
+
 .gesture-info-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -540,7 +571,6 @@ input:checked + .toggle-slider:before {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  align-self: center;
 }
 
 .gesture-info-btn:hover {
