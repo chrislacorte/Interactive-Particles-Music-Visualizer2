@@ -59,23 +59,49 @@
       
       <!-- Top Menu -->
       <div class="top-menu" id="topMenu" style="display: none;">
-        <button class="webcam-btn" id="webcamBtn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-            <circle cx="12" cy="13" r="4"></circle>
-          </svg>
-          <span>Activate Webcam</span>
-        </button>
+        <div class="top-menu-buttons">
+          <button class="webcam-btn" id="webcamBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+              <circle cx="12" cy="13" r="4"></circle>
+            </svg>
+            <span>Activate Handtracking</span>
+          </button>
+          
+          <button class="gesture-info-btn" id="gestureInfoBtn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="m9,9 6,6"></path>
+              <path d="m15,9 -6,6"></path>
+            </svg>
+            <span>Gesture Overview</span>
+          </button>
+        </div>
       </div>
       
       <div class="bottom-menu" id="bottomMenu" style="display: none;">
-        <div class="menu-toggles">
+        <div class="menu-row-1">
           <div class="toggle-container">
             <label class="toggle-switch">
               <input type="checkbox" id="handtrackToggle" checked>
               <span class="toggle-slider"></span>
             </label>
             <span class="toggle-label">Handtrack</span>
+          </div>
+          
+          <div class="playback-controls">
+            <button class="playback-btn" id="playBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5,3 19,12 5,21"></polygon>
+              </svg>
+              <span>Play</span>
+            </button>
+            <button class="playback-btn" id="stopBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="6" y="6" width="12" height="12"></rect>
+              </svg>
+              <span>Stop</span>
+            </button>
           </div>
           
           <div class="toggle-container">
@@ -87,19 +113,17 @@
           </div>
         </div>
         
-        <div class="playback-controls">
-          <button class="playback-btn" id="playBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5,3 19,12 5,21"></polygon>
-            </svg>
-            <span>Play</span>
-          </button>
-          <button class="playback-btn" id="stopBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="6" y="6" width="12" height="12"></rect>
-            </svg>
-            <span>Stop</span>
-          </button>
+        <div class="menu-row-2">
+          <div class="upload-section">
+            <button class="upload-btn" id="uploadBtn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7,10 12,15 17,10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Upload Music</span>
+            </button>
+          </div>
         </div>
         
         <div class="color-section">
@@ -115,6 +139,7 @@
             </div>
           </div>
         </div>
+        
         <div class="modes-section">
           <button class="mode-btn active" data-mode="particles">Particles</button>
           <button class="mode-btn" data-mode="circles">Circles</button>
@@ -130,15 +155,6 @@
             <span>Record</span>
           </button>
         </div>
-        
-        <button class="gesture-info-btn" id="gestureInfoBtn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="m9,9 6,6"></path>
-            <path d="m15,9 -6,6"></path>
-          </svg>
-          <span>Gesture Overview</span>
-        </button>
       </div>
       
       <!-- Gesture Overview Slideout -->
