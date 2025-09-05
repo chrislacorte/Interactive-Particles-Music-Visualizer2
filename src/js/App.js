@@ -454,6 +454,43 @@ export default class App {
     updateColor(300, colorIndicator1, true)
     updateColor(180, colorIndicator2, false)
 
+    // Play/Stop button functionality
+    const playBtn = document.getElementById('playBtn')
+    const stopBtn = document.getElementById('stopBtn')
+    
+    playBtn.addEventListener('click', () => {
+      if (App.audioManager && !App.audioManager.isPlaying) {
+        App.audioManager.play()
+        playBtn.querySelector('span').textContent = 'Pause'
+        playBtn.querySelector('svg').innerHTML = `
+          <rect x="6" y="4" width="4" height="16"></rect>
+          <rect x="14" y="4" width="4" height="16"></rect>
+        `
+      } else if (App.audioManager && App.audioManager.isPlaying) {
+        App.audioManager.pause()
+        playBtn.querySelector('span').textContent = 'Play'
+        playBtn.querySelector('svg').innerHTML = `
+          <polygon points="5,3 19,12 5,21"></polygon>
+        `
+      }
+    })
+    
+    stopBtn.addEventListener('click', () => {
+      if (App.audioManager) {
+        App.audioManager.pause()
+        // Reset audio to beginning if possible
+        if (App.audioManager.audio && App.audioManager.audio.source) {
+          App.audioManager.audio.stop()
+          App.audioManager.audio.play()
+          App.audioManager.audio.pause()
+        }
+        // Update play button to show play state
+        playBtn.querySelector('span').textContent = 'Play'
+        playBtn.querySelector('svg').innerHTML = `
+          <polygon points="5,3 19,12 5,21"></polygon>
+        `
+      }
+    })
     // Record button functionality
     const recordBtn = document.getElementById('recordBtn')
     recordBtn.addEventListener('click', () => {

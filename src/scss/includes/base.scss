@@ -492,7 +492,14 @@ input:checked + .toggle-slider:before {
 }
 
 /* Upload Feature Styles */
-.upload-btn {
+.playback-controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.playback-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(255, 255, 255, 0.8);
@@ -509,13 +516,13 @@ input:checked + .toggle-slider:before {
   align-self: center;
 }
 
-.upload-btn:hover {
+.playback-btn:hover {
   background: rgba(255, 255, 255, 0.2);
   color: white;
   transform: translateY(-1px);
 }
 
-.upload-btn svg {
+.playback-btn svg {
   flex-shrink: 0;
 }
 
