@@ -265,22 +265,8 @@ export default class App {
     bottomMenu.style.display = 'block'
 
     // Toggle functionality
-    const handtrackToggle = document.getElementById('handtrackToggle')
     const hideToggle = document.getElementById('hideToggle')
     const topMenu = document.getElementById('topMenu')
-    
-    // Handtrack toggle
-    handtrackToggle.addEventListener('change', (e) => {
-      if (App.handTrackingManager) {
-        if (e.target.checked) {
-          // Enable hand tracking visualization
-          App.handTrackingManager.setShowHandTracking(true)
-        } else {
-          // Disable hand tracking visualization
-          App.handTrackingManager.setShowHandTracking(false)
-        }
-      }
-    })
     
     // Hide toggle
     hideToggle.addEventListener('change', (e) => {
