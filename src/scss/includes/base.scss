@@ -1199,6 +1199,10 @@ input:checked + .toggle-slider:before {
   border-radius: 7px;
 }
 
+.webcam-preview video.transparent-background {
+  opacity: 0.6;
+}
+
 .webcam-controls {
   position: absolute;
   top: 8px;
@@ -1406,6 +1410,13 @@ input:checked + .toggle-slider:before {
 
 .size-btn.active .size-indicator {
   background: white;
+}
+
+/* Background Options */
+.background-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (min-width: 53em) {

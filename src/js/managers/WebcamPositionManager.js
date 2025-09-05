@@ -127,6 +127,19 @@ export default class WebcamPositionManager {
             </button>
           </div>
         </div>
+        
+        <div class="webcam-menu-section">
+          <div class="webcam-menu-label">Background</div>
+          <div class="background-options">
+            <div class="toggle-container">
+              <label class="toggle-switch">
+                <input type="checkbox" id="transparentBackgroundToggle" ${this.isTransparentBackground ? 'checked' : ''}>
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="toggle-label">Transparent</span>
+            </div>
+          </div>
+        </div>
       </div>
     `
     
@@ -197,6 +210,14 @@ export default class WebcamPositionManager {
         btn.classList.add('active')
       })
     })
+    
+    // Background toggle
+    const backgroundToggle = menu.querySelector('#transparentBackgroundToggle')
+    if (backgroundToggle) {
+      backgroundToggle.addEventListener('change', (e) => {
+        this.toggleTransparentBackground(e.target.checked)
+      })
+    }
   }
 
   setPosition(position) {
@@ -221,6 +242,19 @@ export default class WebcamPositionManager {
     })
   }
 
+  toggleTransparentBackground(enabled) {
+    this.isTransparentBackground = enabled
+    const video = document.getElementById('webcamVideo')
+    
+    if (video) {
+      if (enabled) {
+        video.classList.add('transparent-background')
+      } else {
+        video.classList.remove('transparent-background')
+      }
+    }
+  }
+
   async startWebcam() {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -231,6 +265,11 @@ export default class WebcamPositionManager {
       if (video) {
         video.srcObject = stream
         await video.play()
+        
+        // Apply transparent background if enabled
+        if (this.isTransparentBackground) {
+          video.classList.add('transparent-background')
+        }
       }
       
       this.isVisible = true
