@@ -272,6 +272,8 @@ input:checked + .toggle-slider:before {
 }
 
 .color-pickers-wrapper {
+  padding-top: 16px;
+  padding-bottom: 16px;
   display: flex;
   flex-direction: row;
   gap: 24px;
