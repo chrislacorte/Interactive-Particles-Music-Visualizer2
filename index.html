@@ -125,6 +125,8 @@
           <button class="mode-btn" data-mode="spiral">Spiral</button>
           <button class="mode-btn" data-mode="paint">Paint</button>
           <button class="mode-btn" data-mode="conductor">Conductor</button>
+          <button class="mode-btn" data-mode="paint">Paint</button>
+          <button class="mode-btn" data-mode="conductor">Conductor</button>
         </div>
         
         <div class="hide-section">
@@ -159,14 +161,28 @@
             <div class="gesture-item">
               <div class="gesture-icon">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="m3 17 6-6 4 4 8-8"></path>
+                  <path d="m21 21-2-2"></path>
+                  <path d="m16 16-2-2"></path>
+                </svg>
+              </div>
+              <div class="gesture-info">
+                <h3>Paint Mode</h3>
+                <p>Point with your index finger to paint with particles. Move your finger around the screen and watch as particles are pushed away from your finger position, creating dynamic painting effects.</p>
+              </div>
+            </div>
+            
+            <div class="gesture-item">
+              <div class="gesture-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 2v20"></path>
                   <path d="m8 6 4-4 4 4"></path>
                   <path d="m8 18 4 4 4 4"></path>
                 </svg>
               </div>
               <div class="gesture-info">
-                <h3>Conductor Gesture</h3>
-                <p>Move your hand up and down to control the intensity and amplitude of the particle effects. The faster you move, the more dramatic the visual response.</p>
+                <h3>Conductor Mode</h3>
+                <p>Move your hand up and down like a conductor to control vertical wave patterns. The height of your hand determines the amplitude of the wave effect across the particles.</p>
               </div>
             </div>
             
@@ -203,7 +219,8 @@
               <li>Ensure good lighting for optimal hand detection</li>
               <li>Keep your hand clearly visible in the webcam view</li>
               <li>Make deliberate, smooth movements for best response</li>
-              <li>Try different gesture combinations for unique effects</li>
+              <li>Select "Paint" or "Conductor" mode to activate gesture controls</li>
+              <li>Try different gesture combinations with various visual modes</li>
             </ul>
           </div>
         </div>

@@ -164,7 +164,7 @@ export default class HandTrackingManager extends EventDispatcher {
     this.processConductorGesture(hands)
 
     // Process finger paint gesture (index finger tip position)
-    this.processFingerPaintGesture(hands);
+    this.processFingerPaintGesture(hands)
     
     // Process zoom gesture (thumb-index distance)
     this.processZoomGesture(hands)
@@ -193,16 +193,16 @@ export default class HandTrackingManager extends EventDispatcher {
   }
 
   processFingerPaintGesture(hands) {
-    if (hands.length === 0) return;
+    if (hands.length === 0) return
 
-    const hand = hands;
-    const indexTip = hand; // INDEX_FINGER_TIP
+    const hand = hands[0]
+    const indexTip = hand[8] // INDEX_FINGER_TIP
 
     this.dispatchEvent({
       type: 'fingerPaintGesture',
       x: indexTip.x,
       y: indexTip.y
-    });
+    })
   }
 
   processZoomGesture(hands) {

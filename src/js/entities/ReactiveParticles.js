@@ -19,6 +19,10 @@ export default class ReactiveParticles extends THREE.Object3D {
       paintStrength: 0.5, // Strength of influence for paint mode
       conductorWaveStrength: 1.0, // Amplitude of wave for conductor mode
       conductorWaveFrequency: 5.0, // Frequency of wave for conductor mode
+      paintRadius: 0.5, // Radius of influence for paint mode
+      paintStrength: 0.5, // Strength of influence for paint mode
+      conductorWaveStrength: 1.0, // Amplitude of wave for conductor mode
+      conductorWaveFrequency: 5.0, // Frequency of wave for conductor mode
     }
   }
 
@@ -43,6 +47,12 @@ export default class ReactiveParticles extends THREE.Object3D {
         maxDistance: { value: 1.8 },
         startColor: { value: new THREE.Color(this.properties.startColor) },
         endColor: { value: new THREE.Color(this.properties.endColor) },
+        // New uniforms for gesture modes
+        u_mode: { value: 0 }, // 0: normal, 1: paint, 2: conductor
+        u_fingerPosition: { value: new THREE.Vector2(0.5, 0.5) },
+        u_paintRadius: { value: this.properties.paintRadius },
+        u_paintStrength: { value: this.properties.paintStrength },
+        u_conductorY: { value: 0.5 },
         // New uniforms for gesture modes
         u_mode: { value: 0 }, // 0: normal, 1: paint, 2: conductor
         u_fingerPosition: { value: new THREE.Vector2(0.5, 0.5) },
@@ -75,15 +85,23 @@ export default class ReactiveParticles extends THREE.Object3D {
     this.material.uniforms.endColor.value = color
   }
 
+  updateFingerPosition(x, y) {
+    this.material.uniforms.u_fingerPosition.value.set(x, y)
+  }
+
+  updateConductorY(y) {
+    this.material.uniforms.u_conductorY.value = y
+  }
+
   setMode(mode) {
-    this.currentMode = mode;
+    this.currentMode = mode
     // Map mode string to integer for shader uniform
     const modeMap = {
       'particles': 0, 'circles': 0, 'lines': 0, 'anomaly': 0, 'waves': 0, 'spiral': 0,
       'paint': 1,
       'conductor': 2
-    };
-    this.material.uniforms.u_mode.value = modeMap[mode] || 0; // Default to 0 if mode not found
+    }
+    this.material.uniforms.u_mode.value = modeMap[mode] || 0 // Default to 0 if mode not found
 
     this.resetMesh()
   }
