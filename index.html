@@ -100,18 +100,22 @@
             </svg>
             <span>Stop</span>
           </button>
-          
-          <button class="upload-btn" id="uploadBtn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7,10 12,15 17,10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
-            </svg>
-            <span>Upload Music</span>
-          </button>
         </div>
         
         <div class="color-section">
+          <div class="color-label">Color Selection</div>
+          <div class="color-pickers-wrapper">
+            <div class="color-picker-container">
+              <div class="color-indicator" id="colorIndicator1" title="Click to enter hex color"></div>
+              <input type="range" class="color-slider" id="colorSlider1" min="0" max="360" value="300">
+            </div>
+            <div class="color-picker-container">
+              <div class="color-indicator" id="colorIndicator2" title="Click to enter hex color"></div>
+              <input type="range" class="color-slider" id="colorSlider2" min="0" max="360" value="180">
+            </div>
+          </div>
+        </div>
+        
         <div class="modes-section">
           <div class="current-mode-display" id="currentModeDisplay">Particles</div>
           <button class="mode-btn active" data-mode="particles">Particles</button>
