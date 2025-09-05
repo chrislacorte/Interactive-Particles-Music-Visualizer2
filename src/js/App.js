@@ -3,6 +3,7 @@ import ReativeParticles from './entities/ReactiveParticles'
 import * as dat from 'dat.gui'
 import BPMManager from './managers/BPMManager'
 import AudioManager from './managers/AudioManager'
+import HandTrackingManager from './managers/HandTrackingManager'
 
 export default class App {
   //THREE objects
@@ -12,6 +13,7 @@ export default class App {
   //Managers
   static audioManager = null
   static bpmManager = null
+  static handTrackingManager = null
 
   constructor() {
     this.onClickBinder = () => this.init()
@@ -61,16 +63,114 @@ export default class App {
 
     document.querySelector('.user_interaction').remove()
 
+    // Initialize hand tracking manager
+    App.handTrackingManager = new HandTrackingManager()
+    await App.handTrackingManager.init()
+    
+    // Add hand tracking event listeners
+    App.handTrackingManager.addEventListener('conductorGesture', (event) => {
+      this.onConductorGesture(event)
+    })
+    
+    App.handTrackingManager.addEventListener('zoomGesture', (event) => {
+      this.onZoomGesture(event)
+    })
     App.audioManager.play()
 
     this.particles = new ReativeParticles()
     this.particles.init()
 
     this.initBottomMenu()
+    this.initTopMenu()
 
     this.update()
   }
 
+  initTopMenu() {
+    const topMenu = document.getElementById('topMenu')
+    const webcamBtn = document.getElementById('webcamBtn')
+    
+    topMenu.style.display = 'block'
+    
+    webcamBtn.addEventListener('click', () => {
+      this.toggleWebcam()
+    })
+  }
+
+  async toggleWebcam() {
+    const webcamBtn = document.getElementById('webcamBtn')
+    const span = webcamBtn.querySelector('span')
+    
+    if (!App.handTrackingManager.isHandTrackingActive()) {
+      // Start webcam
+      webcamBtn.disabled = true
+      span.textContent = 'Starting...'
+      
+      try {
+        await App.handTrackingManager.start()
+        webcamBtn.classList.add('active')
+        span.textContent = 'Webcam Active'
+        console.log('Hand tracking activated')
+      } catch (error) {
+        console.error('Failed to start webcam:', error)
+        span.textContent = 'Failed to Start'
+        setTimeout(() => {
+          span.textContent = 'Activate Webcam'
+        }, 2000)
+      }
+      
+      webcamBtn.disabled = false
+    } else {
+      // Stop webcam
+      App.handTrackingManager.stop()
+      webcamBtn.classList.remove('active')
+      span.textContent = 'Activate Webcam'
+      console.log('Hand tracking deactivated')
+    }
+  }
+
+  onConductorGesture(event) {
+    if (this.particles && this.particles.material) {
+      // Map conductor intensity to amplitude and offset gain
+      const intensity = Math.min(event.intensity, 2.0) // Cap the intensity
+      
+      // Increase amplitude based on conductor movement
+      const baseAmplitude = App.audioManager?.isPlaying ? 
+        0.8 + (App.audioManager.frequencyData.high * 0.2) : 1.0
+      
+      this.particles.material.uniforms.amplitude.value = baseAmplitude + (intensity * 0.5)
+      
+      // Add some offset gain for more dramatic effect
+      const baseOffsetGain = App.audioManager?.isPlaying ? 
+        App.audioManager.frequencyData.mid * 0.6 : 0
+      
+      this.particles.material.uniforms.offsetGain.value = baseOffsetGain + (intensity * 0.3)
+    }
+  }
+
+  onZoomGesture(event) {
+    if (this.camera) {
+      // Map zoom gesture to camera position
+      const zoomSpeed = 0.5
+      const minZ = 5
+      const maxZ = 20
+      
+      // Calculate new camera position based on gesture
+      let newZ = this.camera.position.z
+      
+      if (event.delta > 0) {
+        // Fingers moving apart - zoom in
+        newZ -= zoomSpeed
+      } else if (event.delta < 0) {
+        // Fingers moving together - zoom out
+        newZ += zoomSpeed
+      }
+      
+      // Clamp the zoom level
+      newZ = Math.max(minZ, Math.min(maxZ, newZ))
+      this.camera.position.z = newZ
+    }
+  }
   initBottomMenu() {
     const bottomMenu = document.getElementById('bottomMenu')
     bottomMenu.style.display = 'block'

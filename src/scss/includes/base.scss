@@ -300,6 +300,50 @@ a:focus-visible {
   background: #553c9a;
 }
 
+.top-menu {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 16px 24px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  z-index: 100;
+}
+
+.webcam-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.webcam-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.webcam-btn.active {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+.webcam-btn svg {
+  flex-shrink: 0;
+}
+
 .modes-section {
   display: flex;
   gap: 8px;

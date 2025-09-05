@@ -15,6 +15,11 @@
     <meta name="author" content="Tiago Canzian for Codrops" />
     <link rel="shortcut icon" href="img/favicon.ico" />
     <link rel="stylesheet" href="./src/scss/style.scss" />
+    <!-- MediaPipe Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
     <script>
       document.documentElement.className = 'js'
     </script>
@@ -23,6 +28,11 @@
   <body class="demo-1">
     <main>
       <div class="content"></div>
+      
+      <!-- Hidden video and canvas for MediaPipe -->
+      <video id="webcam" style="display: none;" autoplay muted playsinline></video>
+      <canvas id="handCanvas" style="display: none;"></canvas>
+      
       <div class="user_interaction">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -45,6 +55,18 @@
         </svg>
         <p>Click to Start</p>
       </div>
+      
+      <!-- Top Menu -->
+      <div class="top-menu" id="topMenu" style="display: none;">
+        <button class="webcam-btn" id="webcamBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+          <span>Activate Webcam</span>
+        </button>
+      </div>
+      
       <div class="bottom-menu" id="bottomMenu" style="display: none;">
         <div class="color-section">
           <div class="color-label">Color Selection</div>
