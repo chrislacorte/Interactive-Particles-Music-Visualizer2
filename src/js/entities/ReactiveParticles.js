@@ -41,7 +41,6 @@ export default class ReactiveParticles extends THREE.Object3D {
       },
     })
 
-    this.addGUI()
     this.resetMesh()
   }
 
@@ -190,46 +189,4 @@ export default class ReactiveParticles extends THREE.Object3D {
     this.material.uniforms.time.value = this.time
   }
 
-  addGUI() {
-    //Add GUI controls
-    const gui = App.gui
-    const particlesFolder = gui.addFolder('PARTICLES')
-    particlesFolder
-      .addColor(this.properties, 'startColor')
-      .listen()
-      .name('Start Color')
-      .onChange((e) => {
-        this.material.uniforms.startColor.value = new THREE.Color(e)
-      })
-
-    particlesFolder
-      .addColor(this.properties, 'endColor')
-      .listen()
-      .name('End Color')
-      .onChange((e) => {
-        this.material.uniforms.endColor.value = new THREE.Color(e)
-      })
-
-    const visualizerFolder = gui.addFolder('VISUALIZER')
-    visualizerFolder.add(this.properties, 'autoMix').listen().name('Auto Mix')
-    visualizerFolder.add(this.properties, 'autoRotate').listen().name('Auto Rotate')
-
-    const buttonShowBox = {
-      showBox: () => {
-        this.destroyMesh()
-        this.createBoxMesh()
-        this.properties.autoMix = false
-      },
-    }
-    visualizerFolder.add(buttonShowBox, 'showBox').name('Show Box')
-
-    const buttonShowCylinder = {
-      showCylinder: () => {
-        this.destroyMesh()
-        this.createCylinderMesh()
-        this.properties.autoMix = false
-      },
-    }
-    visualizerFolder.add(buttonShowCylinder, 'showCylinder').name('Show Cylinder')
-  }
 }

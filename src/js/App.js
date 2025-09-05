@@ -43,8 +43,6 @@ export default class App {
     this.scene.add(App.holder)
     App.holder.sortObjects = false
 
-    App.gui = new dat.GUI()
-
     this.createManagers()
 
     this.resize()
