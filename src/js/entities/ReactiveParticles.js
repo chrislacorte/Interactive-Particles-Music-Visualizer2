@@ -57,6 +57,14 @@ export default class ReactiveParticles extends THREE.Object3D {
     this.material.uniforms.endColor.value = complementaryColor
   }
 
+  updateStartColor(color) {
+    this.material.uniforms.startColor.value = color
+  }
+
+  updateEndColor(color) {
+    this.material.uniforms.endColor.value = color
+  }
+
   setMode(mode) {
     this.currentMode = mode
     this.resetMesh()

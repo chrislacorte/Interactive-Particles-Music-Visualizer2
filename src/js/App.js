@@ -75,26 +75,38 @@ export default class App {
     const bottomMenu = document.getElementById('bottomMenu')
     bottomMenu.style.display = 'block'
 
-    // Color picker functionality
-    const colorSlider = document.getElementById('colorSlider')
-    const colorIndicator = document.getElementById('colorIndicator')
-    const hexDisplay = document.getElementById('hexDisplay')
+    // Color picker functionality for both sliders
+    const colorSlider1 = document.getElementById('colorSlider1')
+    const colorIndicator1 = document.getElementById('colorIndicator1')
+    const hexDisplay1 = document.getElementById('hexDisplay1')
+    
+    const colorSlider2 = document.getElementById('colorSlider2')
+    const colorIndicator2 = document.getElementById('colorIndicator2')
+    const hexDisplay2 = document.getElementById('hexDisplay2')
 
-    const updateColor = (hue) => {
+    const updateColor = (hue, indicator, display, isFirst = true) => {
       const color = new THREE.Color().setHSL(hue / 360, 1, 0.5)
       const hexColor = '#' + color.getHexString().toUpperCase()
       
-      colorIndicator.style.background = hexColor
-      hexDisplay.textContent = hexColor
+      indicator.style.background = hexColor
+      display.textContent = hexColor
       
       // Update particle colors in real-time
       if (this.particles) {
-        this.particles.updateColors(color)
+        if (isFirst) {
+          this.particles.updateStartColor(color)
+        } else {
+          this.particles.updateEndColor(color)
+        }
       }
     }
 
-    colorSlider.addEventListener('input', (e) => {
-      updateColor(parseInt(e.target.value))
+    colorSlider1.addEventListener('input', (e) => {
+      updateColor(parseInt(e.target.value), colorIndicator1, hexDisplay1, true)
+    })
+    
+    colorSlider2.addEventListener('input', (e) => {
+      updateColor(parseInt(e.target.value), colorIndicator2, hexDisplay2, false)
     })
 
     // Mode buttons functionality
@@ -114,8 +126,9 @@ export default class App {
       })
     })
 
-    // Initialize with default color
-    updateColor(300)
+    // Initialize with default colors
+    updateColor(300, colorIndicator1, hexDisplay1, true)
+    updateColor(180, colorIndicator2, hexDisplay2, false)
   }
 
   resize() {
