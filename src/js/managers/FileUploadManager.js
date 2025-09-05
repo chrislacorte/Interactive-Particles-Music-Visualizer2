@@ -74,8 +74,8 @@ export default class FileUploadManager extends EventDispatcher {
   }
 
   addUploadButton() {
-    const bottomMenu = document.getElementById('bottomMenu')
-    if (bottomMenu) {
+    const playbackControls = document.querySelector('.playback-controls')
+    if (playbackControls) {
       const uploadSection = document.createElement('div')
       uploadSection.className = 'upload-section'
       uploadSection.innerHTML = `
@@ -89,9 +89,8 @@ export default class FileUploadManager extends EventDispatcher {
         </button>
       `
       
-      // Insert before the modes section
-      const modesSection = bottomMenu.querySelector('.modes-section')
-      bottomMenu.insertBefore(uploadSection, modesSection)
+      // Append to playback controls
+      playbackControls.appendChild(uploadSection)
     }
   }
 

@@ -744,6 +744,10 @@ input:checked + .toggle-slider:before {
   flex-shrink: 0;
 }
 
+.playback-controls .upload-section {
+  margin-left: auto;
+}
+
 .gesture-info-btn {
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
