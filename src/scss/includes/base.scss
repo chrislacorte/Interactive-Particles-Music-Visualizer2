@@ -160,7 +160,7 @@ a:focus-visible {
   padding: 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 56px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 100;
@@ -589,7 +589,7 @@ input:checked + .toggle-slider:before {
 @media screen and (max-width: 480px) {
   .bottom-menu {
     padding: 16px 20px;
-    gap: 36px;
+    gap: 48px;
     max-width: 95vw;
   }
   
