@@ -752,38 +752,6 @@ input:checked + .toggle-slider:before {
   flex-shrink: 0;
 }
 
-.full-screen-webcam-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.8);
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.full-screen-webcam-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  transform: translateY(-1px);
-}
-
-.full-screen-webcam-btn.active {
-  background: #ef4444;
-  border-color: #ef4444;
-  color: white;
-}
-
-.full-screen-webcam-btn svg {
-  flex-shrink: 0;
-}
-
 /* Gesture Slideout */
 .gesture-slideout {
   position: fixed;
@@ -1247,36 +1215,6 @@ input:checked + .toggle-slider:before {
 
 .webcam-preview:hover .webcam-controls {
   opacity: 1;
-}
-
-/* Full Screen Webcam Background */
-.webcam-preview.fullscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  border-radius: 0;
-  z-index: 50;
-  background: black;
-  border: none;
-}
-
-.webcam-preview.fullscreen video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 0;
-}
-
-.webcam-preview.fullscreen .webcam-controls {
-  display: none;
-}
-
-/* Ensure particle visualization appears above full screen webcam */
-.content {
-  position: relative;
-  z-index: 60;
 }
 
 .webcam-settings-btn {

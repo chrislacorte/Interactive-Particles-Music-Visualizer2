@@ -5,7 +5,6 @@ export default class WebcamPositionManager {
     this.webcamElement = null
     this.isVisible = false
     
-    this.isFullScreenBackgroundActive = false
     // Position coordinates for each corner
     this.positions = {
       'top-left': { top: '20px', left: '20px', right: 'auto', bottom: 'auto' },
@@ -234,9 +233,6 @@ export default class WebcamPositionManager {
   updateWebcamStyle() {
     if (!this.webcamElement) return
     
-    // Don't apply normal styles if in full screen mode
-    if (this.isFullScreenBackgroundActive) return
-    
     const position = this.positions[this.currentPosition]
     const size = this.sizes[this.currentSize]
     
@@ -255,32 +251,6 @@ export default class WebcamPositionManager {
         video.classList.add('transparent-background')
       } else {
         video.classList.remove('transparent-background')
-      }
-    }
-  }
-
-  toggleFullScreenBackground(enabled) {
-    this.isFullScreenBackgroundActive = enabled
-    
-    if (enabled) {
-      // Enable full screen background
-      this.webcamElement.classList.add('fullscreen')
-      this.startWebcam()
-      
-      // Hide settings button in full screen mode
-      const settingsBtn = document.getElementById('webcamSettingsBtn')
-      if (settingsBtn) {
-        settingsBtn.style.display = 'none'
-      }
-    } else {
-      // Disable full screen background
-      this.webcamElement.classList.remove('fullscreen')
-      this.stopWebcam()
-      
-      // Show settings button if small preview is visible
-      const settingsBtn = document.getElementById('webcamSettingsBtn')
-      if (settingsBtn && this.isVisible) {
-        settingsBtn.style.display = ''
       }
     }
   }
@@ -323,12 +293,6 @@ export default class WebcamPositionManager {
   }
 
   toggleWebcam() {
-    // If full screen background is active, disable it first
-    if (this.isFullScreenBackgroundActive) {
-      this.isFullScreenBackgroundActive = false
-      this.webcamElement.classList.remove('fullscreen')
-    }
-    
     if (this.isVisible) {
       this.stopWebcam()
     } else {

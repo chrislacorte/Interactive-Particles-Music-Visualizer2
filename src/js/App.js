@@ -31,9 +31,6 @@ export default class App {
     // Mouse tracking variables
     this.isMouseTrackingActive = false
     this.onMouseMoveBinder = (e) => this.onMouseMove(e)
-    
-    // Full screen webcam background state
-    this.isFullScreenWebcamBackgroundActive = false
   }
 
   init() {
@@ -181,16 +178,11 @@ export default class App {
   initTopMenu() {
     const topMenu = document.getElementById('topMenu')
     const webcamBtn = document.getElementById('webcamBtn')
-    const fullScreenWebcamBtn = document.getElementById('fullScreenWebcamBtn')
     
     topMenu.style.display = 'block'
     
     webcamBtn.addEventListener('click', () => {
       this.toggleWebcam()
-    })
-    
-    fullScreenWebcamBtn.addEventListener('click', () => {
-      this.toggleFullScreenWebcamBackground()
     })
   }
 
@@ -241,51 +233,6 @@ export default class App {
       }
       
       console.log('Hand tracking deactivated')
-    }
-  }
-
-  toggleFullScreenWebcamBackground() {
-    const fullScreenWebcamBtn = document.getElementById('fullScreenWebcamBtn')
-    const webcamBtn = document.getElementById('webcamBtn')
-    
-    this.isFullScreenWebcamBackgroundActive = !this.isFullScreenWebcamBackgroundActive
-    
-    if (this.isFullScreenWebcamBackgroundActive) {
-      // Enable full screen webcam background
-      fullScreenWebcamBtn.classList.add('active')
-      fullScreenWebcamBtn.querySelector('span').textContent = 'Exit Fullscreen'
-      
-      // Disable hand tracking button
-      webcamBtn.disabled = true
-      webcamBtn.style.opacity = '0.5'
-      
-      // Set canvas z-index to appear above webcam
-      this.renderer.domElement.style.zIndex = '60'
-      
-      // Enable full screen background in webcam manager
-      if (App.webcamPositionManager) {
-        App.webcamPositionManager.toggleFullScreenBackground(true)
-      }
-      
-      console.log('Full screen webcam background enabled')
-    } else {
-      // Disable full screen webcam background
-      fullScreenWebcamBtn.classList.remove('active')
-      fullScreenWebcamBtn.querySelector('span').textContent = 'Fullscreen Background'
-      
-      // Re-enable hand tracking button
-      webcamBtn.disabled = false
-      webcamBtn.style.opacity = ''
-      
-      // Reset canvas z-index
-      this.renderer.domElement.style.zIndex = ''
-      
-      // Disable full screen background in webcam manager
-      if (App.webcamPositionManager) {
-        App.webcamPositionManager.toggleFullScreenBackground(false)
-      }
-      
-      console.log('Full screen webcam background disabled')
     }
   }
 
