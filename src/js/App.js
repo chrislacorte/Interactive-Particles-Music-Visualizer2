@@ -316,6 +316,7 @@ export default class App {
         if (App.fileUploadManager) {
           App.fileUploadManager.showUploadModal()
         }
+      })
     })
 
     // Gesture info button functionality
@@ -346,10 +347,11 @@ export default class App {
     const uploadBtn = document.getElementById('uploadBtn')
     if (uploadBtn) {
       uploadBtn.addEventListener('click', () => {
-      if (App.fileUploadManager) {
-        App.fileUploadManager.showUploadModal()
-      }
-    })
+        if (App.fileUploadManager) {
+          App.fileUploadManager.showUploadModal()
+        }
+      })
+    }
 
     // Color picker functionality for both sliders
     const colorSlider1 = document.getElementById('colorSlider1')
